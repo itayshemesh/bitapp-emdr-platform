@@ -77,18 +77,21 @@ class TestGenericFrameworkEngine(unittest.TestCase):
 
         _, eval_s2 = engine.execute_stimulation_set(self.fast_config, "Shift 2", new_sud=1)
         self.assertTrue(eval_s2.safe_to_proceed)
+        self.assertEqual(eval_s2.recommended_phase, EMDRPhase.PHASE_5_INSTALLATION)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_5_INSTALLATION)
 
         _, eval_s3 = engine.execute_stimulation_set(
             self.slow_config, "Installed", new_sud=0, new_voc=7, somatic_tension_clear=False
         )
         self.assertTrue(eval_s3.safe_to_proceed)
+        self.assertEqual(eval_s3.recommended_phase, EMDRPhase.PHASE_6_BODY_SCAN)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_6_BODY_SCAN)
 
         _, eval_s4 = engine.execute_stimulation_set(
             self.slow_config, "Body scan clear", new_sud=0, new_voc=7, somatic_tension_clear=True
         )
         self.assertTrue(eval_s4.safe_to_proceed)
+        self.assertEqual(eval_s4.recommended_phase, EMDRPhase.PHASE_7_CLOSURE)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_7_CLOSURE)
         self.assertTrue(engine.sets[-1].somatic_tension_clear)
         self.assertTrue(engine.closure_achieved)
@@ -115,6 +118,20 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertTrue(eval_7.safe_to_proceed)
         self.assertIsNotNone(eval_7.caution_warning)
         self.assertIn("7/10", eval_7.caution_warning or "")
+
+        # Pre-session emotional_overwhelm_score == 7 also emits Level-7 caution warning
+        caution_wot = WindowOfToleranceCheck(
+            dissociation_score=1,
+            emotional_overwhelm_score=7,
+            safe_place_established=True,
+            container_exercise_ready=True,
+            human_clinician_present=False,
+        )
+        engine_caution_wot = ProtocolEngine(adapter=self.adapter)
+        eval_caution_wot = engine_caution_wot.start_session(self.safe_target, caution_wot)
+        self.assertTrue(eval_caution_wot.safe_to_proceed)
+        self.assertIsNotNone(eval_caution_wot.caution_warning)
+        self.assertIn("7/10", eval_caution_wot.caution_warning or "")
 
         # Mid-session spike to 8 triggers Auto-Stop
         _, eval_spike_8 = engine.execute_stimulation_set(

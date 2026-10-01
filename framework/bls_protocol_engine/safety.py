@@ -137,13 +137,16 @@ class SafetyCircuitBreaker:
                     route_to_human_clinician=True,
                 )
 
-            if target.initial_sud == self.caution_self_guided_sud:
+            if (
+                target.initial_sud == self.caution_self_guided_sud
+                or wot.emotional_overwhelm_score == self.caution_self_guided_sud
+            ):
                 return SafetyEvaluation(
                     safe_to_proceed=True,
                     recommended_phase=EMDRPhase.PHASE_3_ASSESSMENT,
                     caution_warning=(
-                        "Caution (Pain Level 7/10): This memory is strong. You may continue solo "
-                        "if you feel grounded, or switch to calming mode (Speed 2) at any time."
+                        "Caution (Pain/Overwhelm Level 7/10): This memory or current state is strong. "
+                        "You may continue solo if you feel grounded, or switch to calming mode (Speed 2) at any time."
                     ),
                 )
 
@@ -203,7 +206,27 @@ class SafetyCircuitBreaker:
                     route_to_human_clinician=not human_clinician_present,
                 )
 
-        if latest.sud_rating <= 1:
+        if latest.phase == EMDRPhase.PHASE_6_BODY_SCAN and latest.somatic_tension_clear:
+            return SafetyEvaluation(
+                safe_to_proceed=True,
+                recommended_phase=EMDRPhase.PHASE_7_CLOSURE,
+                interweave_or_grounding_prompt=(
+                    "Body scan is clear! Proceed to Phase 7 (Session Closure) at Speed 2, "
+                    "Intensity 3 for 60s (Range: Speed 1-3, 60-120s)."
+                ),
+            )
+
+        if latest.phase == EMDRPhase.PHASE_5_INSTALLATION and latest.voc_rating >= 6:
+            return SafetyEvaluation(
+                safe_to_proceed=True,
+                recommended_phase=EMDRPhase.PHASE_6_BODY_SCAN,
+                interweave_or_grounding_prompt=(
+                    "Positive belief locked in! Move to Phase 6 (Body Scan) to check for any "
+                    "remaining physical tension."
+                ),
+            )
+
+        if latest.phase == EMDRPhase.PHASE_4_DESENSITIZATION and latest.sud_rating <= 1:
             return SafetyEvaluation(
                 safe_to_proceed=True,
                 recommended_phase=EMDRPhase.PHASE_5_INSTALLATION,
@@ -220,8 +243,13 @@ class SafetyCircuitBreaker:
                 "You may continue to the next round if you feel steady, or switch to Speed 2 to calm down."
             )
 
+        default_phase = (
+            latest.phase
+            if latest.phase in (EMDRPhase.PHASE_5_INSTALLATION, EMDRPhase.PHASE_6_BODY_SCAN)
+            else EMDRPhase.PHASE_4_DESENSITIZATION
+        )
         return SafetyEvaluation(
             safe_to_proceed=True,
-            recommended_phase=EMDRPhase.PHASE_4_DESENSITIZATION,
+            recommended_phase=default_phase,
             caution_warning=caution_msg,
         )
