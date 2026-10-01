@@ -216,7 +216,7 @@ class SafetyCircuitBreaker:
                 ),
             )
 
-        if latest.phase == EMDRPhase.PHASE_5_INSTALLATION and latest.voc_rating >= 6:
+        if latest.phase == EMDRPhase.PHASE_5_INSTALLATION and latest.voc_rating >= 7:
             return SafetyEvaluation(
                 safe_to_proceed=True,
                 recommended_phase=EMDRPhase.PHASE_6_BODY_SCAN,

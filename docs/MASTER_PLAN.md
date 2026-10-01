@@ -4,6 +4,14 @@
 * **Repository**: `https://github.com/itayshemesh/bitapp-emdr-platform` (`main` branch)
 * **Single Source of Truth**: This document unites the Clinical Treatment Guide, Hardware & Cost Breakdown, Step-by-Step Bi-Tapp Operating Manual, Two-Layer Software Architecture, Granular Task Roadmap, and Rollout Strategy into one canonical Master Plan.
 
+> [!TIP]
+> **In Simple Words — 30-Second Quick-Start Cheat Sheet**
+> * **What to Buy**: **Bi-Tapp Base Kit ($277) + Wristbands ($20)** at `https://bi-tapp.com/` (~$309 total with US shipping).
+> * **Weeks 1–4 Plan ($0/mo Solo First)**: Use your buzzers solo first. Only book an online human therapist (via your 5-character `remotEMDR` code) in Week 5+ if a memory refuses to budge.
+> * **Stop Ex-Girlfriend Thought Loops Anytime (Mode A)**: Turn on **Speed `2`, Intensity `3` for `10 mins` (`600s`)** (`Range: Speed 1–3, Int 2–4, 5–15 mins / 300–900s`) and breathe slowly until the loop fades.
+> * **Daily Calm & 3-Kids Positive Anchor (Mode B)**: Every morning/evening, picture a warm moment with your 3 kids at **Speed `3`, Intensity `3` for `20s` rounds** (`Range: Speed 2–4, Int 2–4, 15–20s`).
+> * **1x/Week Breakup Memory Clearing (Mode C $\rightarrow$ D1 $\rightarrow$ D2)**: Once a week, process one breakup memory at **Speed `7`, Intensity `6` for `35s` rounds** (`Pain 1–6` normal; `Pain 7` shows a Caution Prompt; `Pain 8–10` or `3` stuck rounds **Auto-Stops** to Calming Mode **Speed `2`, Intensity `3`, `60s`**).
+
 ---
 
 ## 1. Executive Summary & Your Chosen Operating Decisions
