@@ -81,10 +81,12 @@ class TestBiTappPersonalApplication(unittest.TestCase):
 
     def test_breakup_and_children_clinical_packs_safety_boundaries(self) -> None:
         breakup_pack = get_breakup_rumination_target_pack()
-        self.assertEqual(len(breakup_pack), 3)
+        self.assertEqual(len(breakup_pack), 4)
         self.assertLessEqual(breakup_pack[0].initial_sud, 6)
         self.assertFalse(breakup_pack[0].requires_human_clinician)
-        self.assertTrue(breakup_pack[2].requires_human_clinician)
+        self.assertEqual(breakup_pack[2].initial_sud, 7)
+        self.assertFalse(breakup_pack[2].requires_human_clinician)
+        self.assertTrue(breakup_pack[3].requires_human_clinician)
 
         kids_pack = get_children_separation_rdi_pack()
         self.assertEqual(len(kids_pack), 1)

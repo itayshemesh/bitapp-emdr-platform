@@ -124,6 +124,12 @@ class ProtocolEngine:
             if somatic_tension_clear:
                 self._record_phase(EMDRPhase.PHASE_7_CLOSURE)
                 self.closure_achieved = True
+        elif (
+            self.current_phase == EMDRPhase.PHASE_6_BODY_SCAN
+            and somatic_tension_clear
+        ):
+            self._record_phase(EMDRPhase.PHASE_7_CLOSURE)
+            self.closure_achieved = True
 
         return receipt, evaluation
 

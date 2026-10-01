@@ -96,6 +96,18 @@ class SafetyCircuitBreaker:
             )
 
         if not wot.human_clinician_present:
+            if wot.emotional_overwhelm_score >= self.auto_stop_self_guided_sud:
+                return SafetyEvaluation(
+                    safe_to_proceed=False,
+                    recommended_phase=EMDRPhase.PHASE_2_PREPARATION,
+                    trigger_reason=(
+                        f"Pre-session emotional overwhelm ({wot.emotional_overwhelm_score}/10) "
+                        f"reached the solo auto-stop threshold ({self.auto_stop_self_guided_sud}/10)."
+                    ),
+                    interweave_or_grounding_prompt=self.calming_instruction,
+                    route_to_human_clinician=True,
+                )
+
             if target.requires_human_clinician or target.is_ongoing_stressor:
                 return SafetyEvaluation(
                     safe_to_proceed=False,

@@ -5,6 +5,7 @@ A two-layer open-source architecture combining:
 2. **Layer 2 — Specific Bi-Tapp Personal EMDR Application (`apps/bitapp_personal_emdr/`)**: A personal self-regulation and EMDR companion configured for the **[Bi-Tapp](https://bi-tapp.com/)** Bluetooth tactile tappers, implementing a **Solo-First (Weeks 1–4) $\rightarrow$ Human Backup If Stuck** roadmap for:
    - **2.5-Year Ex-Partner Breakup Rumination ("Mini-Trauma")**: On-demand loop interruption (`Start: Speed 2, Intensity 3, 10m | Range: Speed 1–3, Intensity 2–4, 5–15m`) and weekly memory processing (`Start: Speed 7, Intensity 6, 35s rounds | Range: Speed 6–8, Intensity 5–7, 30–45s rounds`).
    - **Living Apart From 3 Children**: Daily Phase 2 Resource Development & Installation (`Start: Speed 3, Intensity 3, 20s rounds | Range: Speed 2–4, Intensity 2–4, 15–20s rounds`) and optional `remotEMDR` 5-character provider code handoff.
+   - **Session Installation & Closure (Modes D1 & D2)**: Positive belief installation (`Start: Speed 4, Intensity 4, 25s rounds | Range: Speed 4–5, Intensity 3–4, 20–30s rounds`) and mandatory calming session closure (`Start: Speed 2, Intensity 3, 60s | Range: Speed 1–3, Intensity 2–4, 60–120s`).
 
 ## Single Source of Truth — Unified Master Plan
 * **[Unified Master Plan & Clinical Guide (`docs/MASTER_PLAN.md`)](docs/MASTER_PLAN.md)**: Complete plain-English explanation, Bi-Tapp hardware & pricing breakdown, Solo-First vs. Human Telehealth comparison, exact Bi-Tapp settings + comfortable ranges, weekly schedule, and software architecture.

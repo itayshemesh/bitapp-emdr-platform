@@ -80,9 +80,16 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_5_INSTALLATION)
 
         _, eval_s3 = engine.execute_stimulation_set(
-            self.slow_config, "Installed", new_sud=0, new_voc=7, somatic_tension_clear=True
+            self.slow_config, "Installed", new_sud=0, new_voc=7, somatic_tension_clear=False
         )
         self.assertTrue(eval_s3.safe_to_proceed)
+        self.assertEqual(engine.current_phase, EMDRPhase.PHASE_6_BODY_SCAN)
+
+        _, eval_s4 = engine.execute_stimulation_set(
+            self.slow_config, "Body scan clear", new_sud=0, new_voc=7, somatic_tension_clear=True
+        )
+        self.assertTrue(eval_s4.safe_to_proceed)
+        self.assertEqual(engine.current_phase, EMDRPhase.PHASE_7_CLOSURE)
         self.assertTrue(engine.sets[-1].somatic_tension_clear)
         self.assertTrue(engine.closure_achieved)
 
@@ -138,6 +145,19 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertEqual(eval_8.recommended_phase, EMDRPhase.PHASE_2_PREPARATION)
         with self.assertRaises(RuntimeError):
             engine2.execute_stimulation_set(self.fast_config, "Blocked pre-session trip", new_sud=7)
+
+        # Pre-session emotional_overwhelm_score >= 8 triggers Auto-Stop in solo mode
+        overwhelmed_wot = WindowOfToleranceCheck(
+            dissociation_score=1,
+            emotional_overwhelm_score=8,
+            safe_place_established=True,
+            container_exercise_ready=True,
+            human_clinician_present=False,
+        )
+        engine3 = ProtocolEngine(adapter=self.adapter)
+        eval_overwhelm = engine3.start_session(self.safe_target, overwhelmed_wot)
+        self.assertFalse(eval_overwhelm.safe_to_proceed)
+        self.assertIn("overwhelm", (eval_overwhelm.trigger_reason or "").lower())
 
     def test_stagnation_circuit_breaker_trips_after_3_flat_sets_and_is_domain_agnostic(self) -> None:
         engine = ProtocolEngine(
