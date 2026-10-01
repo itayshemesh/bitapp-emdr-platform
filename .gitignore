@@ -1,0 +1,18 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Strict Credential & Personal Session Data Isolation
+.env
+*.env
+*secret*
+*token*
+oauth_client.json
+credentials.json
+sessions/
+*.jsonl
