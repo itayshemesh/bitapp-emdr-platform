@@ -131,7 +131,7 @@ class StimulationSetRecord:
     post_set_observation: str
     sud_rating: int
     voc_rating: int
-    somatic_tension_Clear: bool = False
+    somatic_tension_clear: bool = False
     circuit_breaker_triggered: bool = False
     circuit_breaker_reason: Optional[str] = None
     timestamp_utc: str = field(

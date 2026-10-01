@@ -43,11 +43,24 @@ class SafetyCircuitBreaker:
         auto_stop_self_guided_sud: int = 8,
         stagnation_set_limit: int = 3,
         max_dissociation_score: int = 4,
+        calming_instruction: str = (
+            "Immediately switch bilateral stimulation to Calming Mode (Start at Speed 2, "
+            "Intensity 3). Visualize placing the target memory into your locked Container "
+            "and take slow 4-second in / 6-second out breaths."
+        ),
+        stagnation_interweave_prompt: str = (
+            "Unstick Prompt: Ask yourself 'What stops this past memory from being over today?' "
+            "Switch bilateral stimulation to Calming Mode (Start at Speed 2, Intensity 3, 60s) "
+            "to ground your nervous system. If this memory stays stuck across sessions, consider "
+            "booking a human therapist."
+        ),
     ) -> None:
         self.caution_self_guided_sud = caution_self_guided_sud
         self.auto_stop_self_guided_sud = auto_stop_self_guided_sud
         self.stagnation_set_limit = stagnation_set_limit
         self.max_dissociation_score = max_dissociation_score
+        self.calming_instruction = calming_instruction
+        self.stagnation_interweave_prompt = stagnation_interweave_prompt
 
     def evaluate_pre_session(
         self,
@@ -108,10 +121,7 @@ class SafetyCircuitBreaker:
                         f"automatic stop threshold ({self.auto_stop_self_guided_sud}+/10) for "
                         "solo sessions."
                     ),
-                    interweave_or_grounding_prompt=(
-                        "Switch to Mode A Calming (Start at Speed 2, Intensity 3) or break this "
-                        "memory into a smaller piece before trying again."
-                    ),
+                    interweave_or_grounding_prompt=self.calming_instruction,
                     route_to_human_clinician=True,
                 )
 
@@ -151,10 +161,7 @@ class SafetyCircuitBreaker:
                     f"Auto-Stop: Pain level rose to {latest.sud_rating}/10 during solo session "
                     f"(auto-stop threshold is {self.auto_stop_self_guided_sud}/10)."
                 ),
-                interweave_or_grounding_prompt=(
-                    "Immediately switch Bi-Tapp to Speed 2, Intensity 3. Visualize placing the "
-                    "memory into your locked Container and take slow 4-second in / 6-second out breaths."
-                ),
+                interweave_or_grounding_prompt=self.calming_instruction,
                 route_to_human_clinician=True,
             )
 
@@ -180,12 +187,7 @@ class SafetyCircuitBreaker:
                         f"3-Round Stall Detected: Pain level stayed stuck at {last_sud}/10 across "
                         f"{self.stagnation_set_limit} rounds in a row."
                     ),
-                    interweave_or_grounding_prompt=(
-                        "Unstick Prompt: Ask yourself 'What stops this 2.5-year-old memory from "
-                        "being over today?' Switch Bi-Tapp to Speed 2 (Intensity 3) for 60s to "
-                        "calm down. If this memory stays stuck across sessions, consider booking "
-                        "a human therapist."
-                    ),
+                    interweave_or_grounding_prompt=self.stagnation_interweave_prompt,
                     route_to_human_clinician=not human_clinician_present,
                 )
 

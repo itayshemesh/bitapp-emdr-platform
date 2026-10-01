@@ -10,11 +10,14 @@ BITAPP_LOOP_INTERRUPTER_PRESET = BilateralStimulationConfig(
     modality=ModalityType.TACTILE_BITAPP,
     speed_level=2,
     intensity_level=3,
-    set_duration_seconds=300,
+    set_duration_seconds=600,
     speed_range=(1, 3),
     intensity_range=(2, 4),
-    duration_range_seconds=(180, 900),
-    mode_label="Mode A: Acute Rumination Loop Interrupter (Start: Speed 2, Int 3, 5m | Range: Speed 1-3, Int 2-4, 3-15m)",
+    duration_range_seconds=(300, 900),
+    mode_label=(
+        "Mode A: Stop Looping Thoughts "
+        "(Start: Speed 2, Int 3, 10m [600s] | Range: Speed 1-3, Int 2-4, 5-15m [300-900s])"
+    ),
 )
 
 # Mode B: Phase 2 Calming & Positive Resource Installation (Safe Place & 3-Kids Connection Anchor)
@@ -27,7 +30,10 @@ BITAPP_PHASE2_RDI_PRESET = BilateralStimulationConfig(
     speed_range=(2, 4),
     intensity_range=(2, 4),
     duration_range_seconds=(15, 20),
-    mode_label="Mode B: Phase 2 RDI Resourcing (Start: Speed 3, Int 3, 20s | Range: Speed 2-4, Int 2-4, 15-20s)",
+    mode_label=(
+        "Mode B: Phase 2 RDI Resourcing "
+        "(Start: Speed 3, Int 3, 20s | Range: Speed 2-4, Int 2-4, 15-20s)"
+    ),
 )
 
 # Mode C: Phase 4 Active Memory Processing (Discrete 2.5-Year Breakup Scenes)
@@ -40,7 +46,10 @@ BITAPP_PHASE4_REPROCESSING_PRESET = BilateralStimulationConfig(
     speed_range=(6, 8),
     intensity_range=(5, 7),
     duration_range_seconds=(30, 45),
-    mode_label="Mode C: Phase 4 Active Desensitization (Start: Speed 7, Int 6, 35s | Range: Speed 6-8, Int 5-7, 30-45s)",
+    mode_label=(
+        "Mode C: Phase 4 Active Desensitization "
+        "(Start: Speed 7, Int 6, 35s | Range: Speed 6-8, Int 5-7, 30-45s)"
+    ),
 )
 
 # Mode D1: Phase 5 Locking In Positive Belief (Installation)
@@ -53,7 +62,10 @@ BITAPP_INSTALLATION_PRESET = BilateralStimulationConfig(
     speed_range=(4, 5),
     intensity_range=(3, 4),
     duration_range_seconds=(20, 30),
-    mode_label="Mode D1: Phase 5 Positive Cognition Installation (Start: Speed 4, Int 4, 25s | Range: Speed 4-5, Int 3-4, 20-30s)",
+    mode_label=(
+        "Mode D1: Phase 5 Positive Cognition Installation "
+        "(Start: Speed 4, Int 4, 25s | Range: Speed 4-5, Int 3-4, 20-30s)"
+    ),
 )
 
 # Mode D2: Phase 7 Calming Closure & Container Grounding
@@ -66,7 +78,10 @@ BITAPP_CLOSURE_CONTAINMENT_PRESET = BilateralStimulationConfig(
     speed_range=(1, 3),
     intensity_range=(2, 4),
     duration_range_seconds=(60, 120),
-    mode_label="Mode D2: Phase 7 Closure & Containment (Start: Speed 2, Int 3, 60s | Range: Speed 1-3, Int 2-4, 60-120s)",
+    mode_label=(
+        "Mode D2: Phase 7 Closure & Containment "
+        "(Start: Speed 2, Int 3, 60s | Range: Speed 1-3, Int 2-4, 60-120s)"
+    ),
 )
 
 

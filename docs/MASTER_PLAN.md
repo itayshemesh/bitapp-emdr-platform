@@ -2,7 +2,7 @@
 
 * **Author**: Itay Shemesh (`itayshemesh`)
 * **Repository**: `https://github.com/itayshemesh/bitapp-emdr-platform` (`main` branch)
-* **Single Source of Truth**: This document unites the Clinical Treatment Guide, Hardware & Cost Breakdown, Step-by-Step Bi-Tapp Operating Manual, and Two-Layer Software Architecture into one canonical Master Plan.
+* **Single Source of Truth**: This document unites the Clinical Treatment Guide, Hardware & Cost Breakdown, Step-by-Step Bi-Tapp Operating Manual, Two-Layer Software Architecture, Granular Task Roadmap, and Rollout Strategy into one canonical Master Plan.
 
 ---
 
@@ -13,7 +13,7 @@ You are acquiring the **Bi-Tapp** wireless Bluetooth tactile bilateral stimulati
 2. **Living Apart From Your 3 Kids**: Ongoing emotional weight, role-loss, and missing your 3 children when not living under the same roof.
 
 ### Summary of Your 5 Governing Decisions
-1. **Single Unified Document**: All clinical, operational, and software architecture docs are merged into this single `docs/MASTER_PLAN.md`.
+1. **Single Unified Document**: All clinical, operational, and software architecture docs are merged into this single `docs/MASTER_PLAN.md` (`docs/ARCHITECTURE_RFC.md` has been removed so there is only one source of truth).
 2. **Primary Treatment Strategy — Try Solo First (Human Only If Stuck)**:
    - **Weeks 1–4 (100% Solo, $0 Session Cost)**: You start completely on your own using the Bi-Tapp buzzers and this open-source companion app—using daily calming to stop ex-girlfriend thought loops on the spot, building positive emotional anchors around your 3 kids, and running 1x/week solo EMDR sessions on manageable breakup memories.
    - **Weeks 5+ (Human Therapist Only If Stuck)**: You only book an online human EMDR therapist (who can remotely control your Bi-Tapp using its 5-character `remotEMDR` code) if specific memories stay stuck after 3 rounds, trigger the Level 8+ auto-stop, or if you want human support for the deeper grief around not living with your 3 kids.
@@ -37,14 +37,14 @@ Normally, while you sleep (especially during REM dream sleep), your brain digest
 When a painful breakup or sudden rejection hits deeply, the stress hormone surge interrupts that filing process:
 * **Stuck as a "Live" File**: Scenes from 2.5 years ago stay stored with the original raw feelings, chest/stomach tightness, and painful beliefs (*"I was discarded"*, *"I am replaceable"*, *"I lost my chance"*).
 * **Why Thinking Doesn't Stop the Loop**: Whenever you are alone at night or hit a quiet moment, that old file lights up as if the breakup just happened today. Your logical brain tries to "think its way out" of a physical alarm signal—which creates **endless looping thoughts**.
-* **How Bi-Tapp Unsticks It**: Holding or wearing the two Bi-Tapp buzzers creates an alternating left-right pulse. Doing two things at once—Briefly holding the memory in mind while feeling the left-right tapping—occupies your brain's short-term working memory, dims the vividness of the image, calms your nervous system, and helps your brain finally file the 2.5-year-old breakup into the past.
+* **How Bi-Tapp Unsticks It**: Holding or wearing the two Bi-Tapp buzzers creates an alternating left-right pulse. Doing two things at once—briefly holding the memory in mind while feeling the left-right tapping—occupies your brain's short-term working memory, dims the vividness of the image, calms your nervous system, and helps your brain finally file the 2.5-year-old breakup into the past.
 
 ### How Living Apart From Your 3 Kids Connects to the Loop
 Unlike the breakup (which happened 2.5 years ago and is over), **not living with your 3 kids is an ongoing present-day reality**.
 * Quiet moments away from your children trigger the exact same "attachment loss / loneliness" alarm in your brain as the breakup.
 * Often, the brain defaults to obsessing over the ex-girlfriend like a "puzzle to solve" because that feels easier than sitting with the raw ache of missing your 3 kids.
 * **How We Handle Both Safely**:
-  1. **For the Ex-Girlfriend Breakup (Past Event)**: We use **Mode A** (to stop daily thought loops in 5–10 minutes) and **Mode C** (once a week at fast tapping `Speed 7` to drain the pain out of specific breakup memories until they drop to `0` or `1` out of `10`).
+  1. **For the Ex-Girlfriend Breakup (Past Event)**: We use **Mode A** (to stop daily thought loops in 5–15 minutes) and **Mode C** (once a week at fast tapping `Speed 7` to drain the pain out of specific breakup memories until they drop to `0` or `1` out of `10`).
   2. **For Living Apart From Your 3 Kids (Ongoing Reality)**: When working solo, we use **Mode B** (slow tapping at `Speed 3` for 20 seconds at a time while focusing on warm, proud moments of connection with your 3 kids) to strengthen your nervous system. We do **not** run fast solo trauma-tapping on raw grief about your kids without a human therapist, so you don't flood yourself with sadness while alone.
 
 ---
@@ -90,7 +90,7 @@ Your chosen plan is **Option 1 (Try Solo First for Weeks 1–4 at $0/month, and 
 
 $$
 \text{Bi-Tapp Profile}(p) = \begin{cases}
-\textbf{Start: } (\text{Speed } 2, \text{Int } 3, 10\text{m}) \;\big|\; \text{Range: } (\text{Speed } 1\text{–}3, \text{Int } 2\text{–}4, 5\text{–}15\text{m}) & \text{Mode A: Stop Looping Thoughts} \\
+\textbf{Start: } (\text{Speed } 2, \text{Int } 3, 10\text{m } [600\text{s}]) \;\big|\; \text{Range: } (\text{Speed } 1\text{–}3, \text{Int } 2\text{–}4, 5\text{–}15\text{m } [300\text{–}900\text{s}]) & \text{Mode A: Stop Looping Thoughts} \\
 \textbf{Start: } (\text{Speed } 3, \text{Int } 3, 20\text{s}) \;\big|\; \text{Range: } (\text{Speed } 2\text{–}4, \text{Int } 2\text{–}4, 15\text{–}20\text{s}) & \text{Mode B: Daily Calming & 3-Kids Anchor} \\
 \textbf{Start: } (\text{Speed } 7, \text{Int } 6, 35\text{s}) \;\big|\; \text{Range: } (\text{Speed } 6\text{–}8, \text{Int } 5\text{–}7, 30\text{–}45\text{s}) & \text{Mode C: Weekly Memory Processing} \\
 \textbf{Start: } (\text{Speed } 4, \text{Int } 4, 25\text{s}) \;\big|\; \text{Range: } (\text{Speed } 4\text{–}5, \text{Int } 3\text{–}4, 20\text{–}30\text{s}) & \text{Mode D1: Lock In Positive Belief} \\
@@ -100,14 +100,14 @@ $$
 
 | Mode | When to Use It | Exact Starting Setting | Comfortable Range | Step-by-Step Instructions (In Plain Words) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Mode A: Stop Looping Thoughts on the Spot** | Anytime day or night when thoughts of your ex-girlfriend start spinning | **Speed `2`**<br>**Intensity `3`**<br>**`10 mins` (`600s`)** | Speed `1–3`<br>Intensity `2–4`<br>`5–15 mins` | 1. Turn on Bi-Tapp in your wristbands or pockets at **Speed 2, Intensity 3**.<br>2. Tell yourself: *"This is a 2.5-year-old memory firing, not an emergency today."*<br>3. Breathe in for 4 seconds, out for 6 seconds while feeling the gentle left-right pulse until the pain drops to `2` or below. |
+| **Mode A: Stop Looping Thoughts on the Spot** | Anytime day or night when thoughts of your ex-girlfriend start spinning | **Speed `2`**<br>**Intensity `3`**<br>**`10 mins` (`600s`)** | Speed `1–3`<br>Intensity `2–4`<br>`5–15 mins` (`300–900s`) | 1. Turn on Bi-Tapp in your wristbands or pockets at **Speed 2, Intensity 3**.<br>2. Tell yourself: *"This is a 2.5-year-old memory firing, not an emergency today."*<br>3. Breathe in for 4 seconds, out for 6 seconds while feeling the gentle left-right pulse until the pain drops to `2` or below. |
 | **Mode B: Daily Calming & 3-Kids Connection Anchor** | Every morning/evening (`10 mins`) & before any memory session | **Speed `3`**<br>**Intensity `3`**<br>**`20 sec` rounds** | Speed `2–4`<br>Intensity `2–4`<br>`15–20 sec` rounds | 1. Picture a warm, happy moment with your **3 kids** (laughing, hugging, feeling proud as their dad) or a peaceful **Safe Place**.<br>2. Notice the warm feeling in your chest.<br>3. Run **short 20-second rounds at Speed 3** *only* while the feeling stays warm and positive. Pause, breathe, and repeat 4–6 times. |
 | **Mode C: Weekly Memory Processing (Phase 4)** | **Once a week** (`60–75 mins`) on a specific breakup memory (`Pain 1–6` normal; `7` caution) | **Speed `7`**<br>**Intensity `6`**<br>**`35 sec` rounds** | Speed `6–8`<br>Intensity `5–7`<br>`30–45 sec` rounds | 1. Pick **one specific snapshot** from the breakup (not the whole relationship) + the negative thought (*"I am replaceable"*) + where you feel it in your body. Rate pain (`0–10`).<br>2. Turn Bi-Tapp to **Speed 7, Intensity 6 for 35 seconds**. Just watch whatever thoughts or feelings pass by like scenery outside a train window.<br>3. **Stop the buzzers**, take a deep breath, and note: *"What is on my mind or body now?"*<br>4. Rate pain (`0–10`) and repeat 35-second rounds until pain drops to **`0` or `1`**. *(If pain stays flat for 3 rounds or hits `8+`, the app auto-stops to Mode D2).* |
 | **Mode D1 & D2: Lock In Positive Belief & Close Session** | At the end of **every** Mode C session (never skip closure!) | **D1 (Belief)**: **Speed `4`, Int `4`, `25s`**<br>**D2 (Close)**: **Speed `2`, Int `3`, `60s`** | D1: Speed `4–5`, Int `3–4`, `20–30s`<br>D2: Speed `1–3`, Int `2–4`, `60–120s` | 1. **Mode D1 (When pain reaches `0–1`)**: Hold the memory together with your new positive belief (*"That chapter is over; I survived and I am moving forward"*) and run **25-second rounds at Speed 4** until the belief feels completely true (`7/7`).<br>2. **Body Scan**: Check head-to-toe for any leftover tightness and tap through it.<br>3. **Mode D2 (Always Finish Here)**: Run **60 seconds at Speed 2, Intensity 3** while picturing locking any unfinished thoughts inside a strong vault (**Container**) until next week. |
 
 ### 5.2 What to Expect & Weekly Frequency Schedule
 
-* **Daily Routine (`10–15 mins/day`)**: Run **Mode B** every morning or before bed to keep your baseline stress low, and trigger **Mode A** on-demand (`5–10 mins`) whenever an ex-girlfriend loop pops up.
+* **Daily Routine (`10–15 mins/day`)**: Run **Mode B** every morning or before bed to keep your baseline stress low, and trigger **Mode A** on-demand (`10 mins` default; `5–15 mins` range) whenever an ex-girlfriend loop pops up.
 * **Weekly Reprocessing Limit (`Strictly 1x / week, 60–75 mins`)**:
   - **Why not every day?** After a Mode C session (`Speed 7`), your brain continues rewiring that memory for **48 to 72 hours** (especially during REM sleep). Doing fast reprocessing every day overloads your nervous system.
   - **What you will feel during the 48-hour rest window**: Vivid dreams, brief waves of emotion, or sudden moments where you realize *"Wait—I haven't thought about her all afternoon, and when I do, it feels distant and flat."*
@@ -125,7 +125,7 @@ $$
 ```mermaid
 graph TD
     User["👤 You + Bi-Tapp Buzzers (https://bi-tapp.com/)"] --> ModeSelect{"Choose Mode"}
-    ModeSelect -->|"Mode A: Ex-Girlfriend Loop Pops Up"| LoopBreak["⚡ Loop Interrupter\nStart: Speed 2, Int 3, 10m\n(Range: Speed 1-3, Int 2-4, 5-15m)"]
+    ModeSelect -->|"Mode A: Ex-Girlfriend Loop Pops Up"| LoopBreak["⚡ Loop Interrupter\nStart: Speed 2, Int 3, 10m (600s)\n(Range: Speed 1-3, Int 2-4, 5-15m [300-900s])"]
     ModeSelect -->|"Mode B: Daily Calm / 3-Kids Connection"| RDI["🛡️ Phase 2 Resourcing\nStart: Speed 3, Int 3, 20s rounds\n(Range: Speed 2-4, Int 2-4, 15-20s)"]
     ModeSelect -->|"Mode C: 1x/Week Breakup Memory Session"| SafetyGate{"Two-Stage Pain Check (0-10)"}
     SafetyGate -->|"Pain 1-6 (Normal Solo)"| Engine["⚙️ Phase 4 Memory Processing\nStart: Speed 7, Int 6, 35s rounds\n(Range: Speed 6-8, Int 5-7, 30-45s)"]
@@ -147,7 +147,7 @@ graph TD
 ```mermaid
 flowchart LR
     subgraph Generic["Layer 1: Generic Framework (framework/bls_protocol_engine/)"]
-        Schemas["schemas.py\n(Exact Start + Range Schemas)"]
+        Schemas["schemas.py\n(Exact Start + Range Dataclasses)"]
         Safety["safety.py\n(Two-Stage SafetyCircuitBreaker:\n1-6 Normal, 7 Caution, 8+ Auto-Stop)"]
         Engine["engine.py\n(8-Phase State Machine)"]
         Adapters["adapters.py\n(StimulationAdapter ABC)"]
@@ -196,20 +196,41 @@ bitapp-emdr-platform/
 ### Component Responsibilities
 
 1. **Layer 1 — Generic Framework (`framework/bls_protocol_engine/`)**:
-   - `schemas.py`: Domain-agnostic models (`EMDRPhase`, `BilateralStimulationConfig` with both exact starting levels and `(min, max)` adjustment ranges, `TargetMemoryNode`, `StimulationSetRecord`, `SessionSummary`).
-   - `safety.py`: `SafetyCircuitBreaker` enforcing the Two-Stage Safety Gate (`caution_self_guided_sud = 7`, `auto_stop_self_guided_sud = 8`, and `stagnation_set_limit = 3`).
-   - `engine.py`: Deterministic 8-phase state machine ensuring every session finishes with Phase 7 calming closure.
-   - `adapters.py`: Pluggable `StimulationAdapter` interface with `BiTappCompanionAdapter` and `AudioVisualSimulatedAdapter`.
+   - `schemas.py`: Domain-agnostic `@dataclass` models (`EMDRPhase`, `BilateralStimulationConfig` with both exact starting levels and `(min, max)` adjustment ranges, `TargetMemoryNode`, `StimulationSetRecord` with `somatic_tension_clear`, `SessionSummary`).
+   - `safety.py`: Domain-agnostic `SafetyCircuitBreaker` enforcing the Two-Stage Safety Gate (`caution_self_guided_sud = 7`, `auto_stop_self_guided_sud = 8`, and `stagnation_set_limit = 3`) with configurable calming and interweave prompts.
+   - `engine.py`: Deterministic 8-phase state machine (`ProtocolEngine`) blocking Phase 4/5 sets if `circuit_breaker_tripped` is `True` and ensuring every session finishes with Phase 7 calming closure.
+   - `adapters.py`: Pluggable `StimulationAdapter` interface with `BiTappCompanionAdapter` (emitting both Exact Starting Settings and Comfortable Ranges) and `AudioVisualSimulatedAdapter`.
    - `workspace_sync.py`: Zero-repo-secret session logger that reads your Google OAuth client config from `~/.config/bitapp-emdr/oauth_client.json` (`chmod 600`, stored strictly outside the Git repository) and writes session logs to `~/.local/share/bitapp-emdr/sessions/`.
 2. **Layer 2 — Specific Bi-Tapp Application (`apps/bitapp_personal_emdr/`)**:
-   - `bitapp_presets.py`: Exact starting numbers + comfortable ranges for Modes A, B, C, D1, D2, and the 5-character `remotEMDR` telehealth bridge.
+   - `bitapp_presets.py`: Exact starting numbers + comfortable ranges for Modes A (`600s` start, `300–900s` range), B (`20s` start, `15–20s` range), C (`35s` start, `30–45s` range), D1 (`25s` start, `20–30s` range), D2 (`60s` start, `60–120s` range), and the 5-character `remotEMDR` telehealth bridge.
    - `clinical_packs.py`: Pre-built target packs for your **2.5-Year Breakup Rumination** and **3-Children Fatherhood Connection Anchor**.
    - `options_analyzer.py`: Cost, frequency, and Solo-First roadmap calculator.
    - `cli.py`: Interactive command-line runner supporting `--mode=summary`, `--mode=loop-interrupt`, and `--mode=simulate-session`.
 
 ---
 
-## 8. How to Run the Application & Verify Everything
+## 8. Implementation Roadmap & Granular Tasks
+
+| Step | Task ID | Layer | Deliverable Summary | Target Files |
+| :--- | :--- | :--- | :--- | :--- |
+| **Phase 1** | `TASK-101` | Documentation | Author unified Master Plan & Clinical Guide (`docs/MASTER_PLAN.md`) as single source of truth. | `docs/MASTER_PLAN.md` |
+| **Phase 2** | `TASK-102` | Security & Setup | Scaffold package metadata, documentation index, and strict `.gitignore` secret isolation (`~/.config/bitapp-emdr/oauth_client.json`). | `README.md`, `pyproject.toml`, `.gitignore` |
+| **Phase 3** | `TASK-103` | Generic Framework | Implement domain-agnostic `@dataclass` schemas (Exact Start + Comfortable Range) and Two-Stage `SafetyCircuitBreaker` (Warning at 7, Auto-Stop at 8). | `framework/bls_protocol_engine/__init__.py`, `framework/bls_protocol_engine/schemas.py`, `framework/bls_protocol_engine/safety.py` |
+| **Phase 4** | `TASK-104` | Generic Framework | Implement 8-phase `ProtocolEngine` state machine, `BiTappCompanionAdapter`, and `GoogleWorkspaceSessionExporter`. | `framework/bls_protocol_engine/engine.py`, `framework/bls_protocol_engine/adapters.py`, `framework/bls_protocol_engine/workspace_sync.py` |
+| **Phase 5** | `TASK-105` | Specific App | Implement Bi-Tapp presets, 2.5-year breakup & 3-kids clinical packs, Solo-First cost/frequency analyzer, and CLI runner. | `apps/bitapp_personal_emdr/__init__.py`, `apps/bitapp_personal_emdr/bitapp_presets.py`, `apps/bitapp_personal_emdr/clinical_packs.py`, `apps/bitapp_personal_emdr/options_analyzer.py`, `apps/bitapp_personal_emdr/cli.py` |
+| **Phase 6** | `TASK-106` | Verification | Implement unit and integration test suites verifying all 8 phases, Two-Stage Safety Gate, and all 5 Bi-Tapp presets. | `tests/test_framework_engine.py`, `tests/test_bitapp_personal_app.py` |
+| **Phase 7** | `TASK-107` | Security Gate | Execute pre-push confidentiality and secret scan verifying zero leaked credentials or internal links. | `docs/MASTER_PLAN.md`, `.gitignore` |
+| **Phase 8** | `TASK-108` | GitHub Rollout | Push feature branch and merge into `main` on `https://github.com/itayshemesh/bitapp-emdr-platform`. | `README.md`, `docs/MASTER_PLAN.md` |
+
+---
+
+## 9. Rollout Strategy, Verification & How to Run
+
+### GitHub Main-Branch Rollout & Secret Isolation
+1. **Single Source of Truth on `main`**: All changes are verified on `feat/generic-framework-and-bitapp-emdr`, audited for zero secret exposure, and fast-forward merged into `main` at `https://github.com/itayshemesh/bitapp-emdr-platform`.
+2. **Zero Credential Check-In**: Your Google OAuth client configuration lives exclusively at `~/.config/bitapp-emdr/oauth_client.json` (`chmod 600`) outside the Git repository, and personal session logs are stored under `~/.local/share/bitapp-emdr/sessions/`.
+
+### How to Run the Application & Verify Everything
 
 ```bash
 # 1. Print your complete Bi-Tapp settings, Solo-First schedule, and cost breakdown:

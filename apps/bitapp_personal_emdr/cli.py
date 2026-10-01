@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 import json
 import sys
 from typing import List, Optional
@@ -46,11 +47,19 @@ def run_cli(argv: Optional[List[str]] = None) -> int:
     if args.mode == "summary":
         report = build_treatment_schedule_and_cost_report()
         options = [o.name for o in get_emdr_options_catalog()]
+        presets = {
+            "mode_a_loop_interrupter": asdict(BITAPP_LOOP_INTERRUPTER_PRESET),
+            "mode_b_phase2_rdi": asdict(BITAPP_PHASE2_RDI_PRESET),
+            "mode_c_phase4_reprocessing": asdict(BITAPP_PHASE4_REPROCESSING_PRESET),
+            "mode_d1_phase5_installation": asdict(BITAPP_INSTALLATION_PRESET),
+            "mode_d2_phase7_closure": asdict(BITAPP_CLOSURE_CONTAINMENT_PRESET),
+        }
         print(
             json.dumps(
                 {
                     "status": "OK",
                     "options_evaluated": options,
+                    "bitapp_mode_presets": presets,
                     "cost_and_schedule_report": report,
                     "breakup_targets_count": len(get_breakup_rumination_target_pack()),
                     "children_rdi_targets_count": len(get_children_separation_rdi_pack()),
@@ -62,7 +71,13 @@ def run_cli(argv: Optional[List[str]] = None) -> int:
 
     if args.mode == "loop-interrupt":
         receipt = adapter.configure_and_prompt(BITAPP_LOOP_INTERRUPTER_PRESET)
-        print(receipt.user_action_instruction)
+        steps = [
+            receipt.user_action_instruction,
+            "Step 1: Turn on Bi-Tapp in your wristbands or pockets at Speed 2, Intensity 3 (10 mins / 600s; Range: Speed 1-3, Intensity 2-4, 5-15 mins / 300-900s).",
+            "Step 2: Tell yourself: 'This is a 2.5-year-old memory firing, not an emergency today.'",
+            "Step 3: Breathe in for 4 seconds, out for 6 seconds while feeling the gentle left-right pulse until the pain drops to 2 or below.",
+        ]
+        print("\n".join(steps))
         return 0
 
     if args.mode == "simulate-session":

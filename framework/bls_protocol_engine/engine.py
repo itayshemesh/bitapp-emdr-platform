@@ -72,6 +72,12 @@ class ProtocolEngine:
         somatic_tension_clear: bool = False,
     ) -> tuple[AdapterDispatchReceipt, SafetyEvaluation]:
         """Executes a single bilateral stimulation set and evaluates safety progression."""
+        if self.circuit_breaker_tripped:
+            raise RuntimeError(
+                "Cannot execute Phase 4/5 stimulation sets when SafetyCircuitBreaker has tripped; "
+                "call complete_closure() instead."
+            )
+
         if self.current_phase == EMDRPhase.PHASE_3_ASSESSMENT:
             self._record_phase(EMDRPhase.PHASE_4_DESENSITIZATION)
 
@@ -85,7 +91,7 @@ class ProtocolEngine:
             post_set_observation=post_set_observation,
             sud_rating=new_sud,
             voc_rating=effective_voc,
-            somatic_tension_Clear=somatic_tension_clear,
+            somatic_tension_clear=somatic_tension_clear,
         )
         self.sets.append(record)
         self.current_sud = new_sud

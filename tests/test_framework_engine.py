@@ -70,8 +70,9 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertIsNone(eval_start.caution_warning)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_3_ASSESSMENT)
 
-        _, eval_s1 = engine.execute_stimulation_set(self.fast_config, "Shift 1", new_sud=3)
+        receipt_1, eval_s1 = engine.execute_stimulation_set(self.fast_config, "Shift 1", new_sud=3)
         self.assertTrue(eval_s1.safe_to_proceed)
+        self.assertIn("Comfortable Range: Speed 6-8, Intensity 5-7, Duration 30-45s", receipt_1.user_action_instruction)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_4_DESENSITIZATION)
 
         _, eval_s2 = engine.execute_stimulation_set(self.fast_config, "Shift 2", new_sud=1)
@@ -82,6 +83,7 @@ class TestGenericFrameworkEngine(unittest.TestCase):
             self.slow_config, "Installed", new_sud=0, new_voc=7, somatic_tension_clear=True
         )
         self.assertTrue(eval_s3.safe_to_proceed)
+        self.assertTrue(engine.sets[-1].somatic_tension_clear)
         self.assertTrue(engine.closure_achieved)
 
         summary = engine.complete_closure(self.slow_config, "Completed safely")
@@ -114,6 +116,10 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertFalse(eval_spike_8.safe_to_proceed)
         self.assertEqual(eval_spike_8.recommended_phase, EMDRPhase.PHASE_7_CLOSURE)
 
+        # Attempting another set after circuit breaker tripped raises RuntimeError
+        with self.assertRaises(RuntimeError):
+            engine.execute_stimulation_set(self.fast_config, "Blocked after trip", new_sud=7)
+
         # Pre-session Level 8 triggers Auto-Stop immediately
         level_8_target = TargetMemoryNode(
             node_id="LEVEL-8",
@@ -130,8 +136,10 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertFalse(eval_8.safe_to_proceed)
         self.assertTrue(eval_8.route_to_human_clinician)
         self.assertEqual(eval_8.recommended_phase, EMDRPhase.PHASE_2_PREPARATION)
+        with self.assertRaises(RuntimeError):
+            engine2.execute_stimulation_set(self.fast_config, "Blocked pre-session trip", new_sud=7)
 
-    def test_stagnation_circuit_breaker_trips_after_3_flat_sets(self) -> None:
+    def test_stagnation_circuit_breaker_trips_after_3_flat_sets_and_is_domain_agnostic(self) -> None:
         engine = ProtocolEngine(
             adapter=self.adapter,
             safety_breaker=SafetyCircuitBreaker(stagnation_set_limit=3),
@@ -145,6 +153,8 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertEqual(eval_s3.recommended_phase, EMDRPhase.PHASE_7_CLOSURE)
         self.assertTrue(engine.circuit_breaker_tripped)
         self.assertIn("stall", (eval_s3.trigger_reason or "").lower())
+        self.assertNotIn("2.5-year-old", eval_s3.interweave_or_grounding_prompt or "")
+        self.assertNotIn("Bi-Tapp", eval_s3.interweave_or_grounding_prompt or "")
 
     def test_workspace_exporter_persists_locally_and_parses_oauth(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

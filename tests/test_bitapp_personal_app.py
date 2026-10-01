@@ -5,6 +5,7 @@ from __future__ import annotations
 import unittest
 
 from apps.bitapp_personal_emdr.bitapp_presets import (
+    BITAPP_CLOSURE_CONTAINMENT_PRESET,
     BITAPP_INSTALLATION_PRESET,
     BITAPP_LOOP_INTERRUPTER_PRESET,
     BITAPP_PHASE2_RDI_PRESET,
@@ -29,22 +30,45 @@ class TestBiTappPersonalApplication(unittest.TestCase):
     """Verifies Bi-Tapp presets (Exact Start + Range), clinical packs, cost analyzer, and CLI."""
 
     def test_bitapp_presets_exact_start_and_ranges(self) -> None:
+        # Mode A: Start Speed 2, Int 3, 10m (600s) | Range Speed 1-3, Int 2-4, 5-15m (300-900s)
         self.assertEqual(BITAPP_LOOP_INTERRUPTER_PRESET.speed_level, 2)
         self.assertEqual(BITAPP_LOOP_INTERRUPTER_PRESET.speed_range, (1, 3))
         self.assertEqual(BITAPP_LOOP_INTERRUPTER_PRESET.intensity_level, 3)
         self.assertEqual(BITAPP_LOOP_INTERRUPTER_PRESET.intensity_range, (2, 4))
+        self.assertEqual(BITAPP_LOOP_INTERRUPTER_PRESET.set_duration_seconds, 600)
+        self.assertEqual(BITAPP_LOOP_INTERRUPTER_PRESET.duration_range_seconds, (300, 900))
 
+        # Mode B: Start Speed 3, Int 3, 20s | Range Speed 2-4, Int 2-4, 15-20s
         self.assertEqual(BITAPP_PHASE2_RDI_PRESET.speed_level, 3)
+        self.assertEqual(BITAPP_PHASE2_RDI_PRESET.speed_range, (2, 4))
+        self.assertEqual(BITAPP_PHASE2_RDI_PRESET.intensity_level, 3)
+        self.assertEqual(BITAPP_PHASE2_RDI_PRESET.intensity_range, (2, 4))
+        self.assertEqual(BITAPP_PHASE2_RDI_PRESET.set_duration_seconds, 20)
         self.assertEqual(BITAPP_PHASE2_RDI_PRESET.duration_range_seconds, (15, 20))
 
+        # Mode C: Start Speed 7, Int 6, 35s | Range Speed 6-8, Int 5-7, 30-45s
         self.assertEqual(BITAPP_PHASE4_REPROCESSING_PRESET.speed_level, 7)
         self.assertEqual(BITAPP_PHASE4_REPROCESSING_PRESET.speed_range, (6, 8))
+        self.assertEqual(BITAPP_PHASE4_REPROCESSING_PRESET.intensity_level, 6)
+        self.assertEqual(BITAPP_PHASE4_REPROCESSING_PRESET.intensity_range, (5, 7))
         self.assertEqual(BITAPP_PHASE4_REPROCESSING_PRESET.set_duration_seconds, 35)
         self.assertEqual(BITAPP_PHASE4_REPROCESSING_PRESET.duration_range_seconds, (30, 45))
 
+        # Mode D1: Start Speed 4, Int 4, 25s | Range Speed 4-5, Int 3-4, 20-30s
         self.assertEqual(BITAPP_INSTALLATION_PRESET.speed_level, 4)
+        self.assertEqual(BITAPP_INSTALLATION_PRESET.speed_range, (4, 5))
+        self.assertEqual(BITAPP_INSTALLATION_PRESET.intensity_level, 4)
+        self.assertEqual(BITAPP_INSTALLATION_PRESET.intensity_range, (3, 4))
         self.assertEqual(BITAPP_INSTALLATION_PRESET.set_duration_seconds, 25)
         self.assertEqual(BITAPP_INSTALLATION_PRESET.duration_range_seconds, (20, 30))
+
+        # Mode D2: Start Speed 2, Int 3, 60s | Range Speed 1-3, Int 2-4, 60-120s
+        self.assertEqual(BITAPP_CLOSURE_CONTAINMENT_PRESET.speed_level, 2)
+        self.assertEqual(BITAPP_CLOSURE_CONTAINMENT_PRESET.speed_range, (1, 3))
+        self.assertEqual(BITAPP_CLOSURE_CONTAINMENT_PRESET.intensity_level, 3)
+        self.assertEqual(BITAPP_CLOSURE_CONTAINMENT_PRESET.intensity_range, (2, 4))
+        self.assertEqual(BITAPP_CLOSURE_CONTAINMENT_PRESET.set_duration_seconds, 60)
+        self.assertEqual(BITAPP_CLOSURE_CONTAINMENT_PRESET.duration_range_seconds, (60, 120))
 
         remote_cfg = create_remotemdr_telehealth_config("ab12c")
         self.assertEqual(remote_cfg.provider_control_code, "AB12C")
@@ -53,6 +77,7 @@ class TestBiTappPersonalApplication(unittest.TestCase):
         receipt = adapter.configure_and_prompt(remote_cfg)
         self.assertTrue(receipt.remote_bridge_active)
         self.assertIn("AB12C", receipt.user_action_instruction)
+        self.assertIn("Comfortable Range:", receipt.user_action_instruction)
 
     def test_breakup_and_children_clinical_packs_safety_boundaries(self) -> None:
         breakup_pack = get_breakup_rumination_target_pack()
