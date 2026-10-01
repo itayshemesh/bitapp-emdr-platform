@@ -23,7 +23,7 @@ from framework.bls_protocol_engine.workspace_sync import GoogleWorkspaceSessionE
 
 
 class TestGenericFrameworkEngine(unittest.TestCase):
-    """Tests the domain-agnostic 8-phase protocol engine and safety circuit breakers."""
+    """Tests the domain-agnostic 8-phase protocol engine and Two-Stage Safety Gate."""
 
     def setUp(self) -> None:
         self.adapter = BiTappCompanionAdapter()
@@ -49,18 +49,25 @@ class TestGenericFrameworkEngine(unittest.TestCase):
             speed_level=7,
             intensity_level=6,
             set_duration_seconds=35,
+            speed_range=(6, 8),
+            intensity_range=(5, 7),
+            duration_range_seconds=(30, 45),
         )
         self.slow_config = BilateralStimulationConfig(
             modality=ModalityType.TACTILE_BITAPP,
             speed_level=2,
             intensity_level=3,
             set_duration_seconds=30,
+            speed_range=(1, 3),
+            intensity_range=(2, 4),
+            duration_range_seconds=(15, 60),
         )
 
     def test_happy_path_desensitization_to_closure(self) -> None:
         engine = ProtocolEngine(adapter=self.adapter)
         eval_start = engine.start_session(self.safe_target, self.safe_wot)
         self.assertTrue(eval_start.safe_to_proceed)
+        self.assertIsNone(eval_start.caution_warning)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_3_ASSESSMENT)
 
         _, eval_s1 = engine.execute_stimulation_set(self.fast_config, "Shift 1", new_sud=3)
@@ -83,6 +90,47 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertFalse(summary.circuit_breaker_tripped)
         self.assertTrue(summary.closure_achieved)
 
+    def test_two_stage_safety_gate_caution_at_7_and_autostop_at_8(self) -> None:
+        level_7_target = TargetMemoryNode(
+            node_id="LEVEL-7",
+            cluster_name="Attachment",
+            title="Level 7 Memory (Caution Allowed)",
+            worst_image_cue="Cue",
+            negative_cognition="NC",
+            positive_cognition="PC",
+            initial_voc=2,
+            initial_sud=7,
+        )
+        engine = ProtocolEngine(adapter=self.adapter)
+        eval_7 = engine.start_session(level_7_target, self.safe_wot)
+        self.assertTrue(eval_7.safe_to_proceed)
+        self.assertIsNotNone(eval_7.caution_warning)
+        self.assertIn("7/10", eval_7.caution_warning or "")
+
+        # Mid-session spike to 8 triggers Auto-Stop
+        _, eval_spike_8 = engine.execute_stimulation_set(
+            self.fast_config, "Pain spiked to 8", new_sud=8
+        )
+        self.assertFalse(eval_spike_8.safe_to_proceed)
+        self.assertEqual(eval_spike_8.recommended_phase, EMDRPhase.PHASE_7_CLOSURE)
+
+        # Pre-session Level 8 triggers Auto-Stop immediately
+        level_8_target = TargetMemoryNode(
+            node_id="LEVEL-8",
+            cluster_name="Attachment",
+            title="Level 8 Memory (Auto-Stop)",
+            worst_image_cue="Cue",
+            negative_cognition="NC",
+            positive_cognition="PC",
+            initial_voc=2,
+            initial_sud=8,
+        )
+        engine2 = ProtocolEngine(adapter=self.adapter)
+        eval_8 = engine2.start_session(level_8_target, self.safe_wot)
+        self.assertFalse(eval_8.safe_to_proceed)
+        self.assertTrue(eval_8.route_to_human_clinician)
+        self.assertEqual(eval_8.recommended_phase, EMDRPhase.PHASE_2_PREPARATION)
+
     def test_stagnation_circuit_breaker_trips_after_3_flat_sets(self) -> None:
         engine = ProtocolEngine(
             adapter=self.adapter,
@@ -96,24 +144,7 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertFalse(eval_s3.safe_to_proceed)
         self.assertEqual(eval_s3.recommended_phase, EMDRPhase.PHASE_7_CLOSURE)
         self.assertTrue(engine.circuit_breaker_tripped)
-        self.assertIn("stagnation", (eval_s3.trigger_reason or "").lower())
-
-    def test_high_sud_target_gated_in_non_human_mode(self) -> None:
-        high_target = TargetMemoryNode(
-            node_id="HIGH-SUD",
-            cluster_name="Attachment",
-            title="High Distress Scene",
-            worst_image_cue="Cue",
-            negative_cognition="NC",
-            positive_cognition="PC",
-            initial_voc=2,
-            initial_sud=8,
-        )
-        engine = ProtocolEngine(adapter=self.adapter)
-        eval_start = engine.start_session(high_target, self.safe_wot)
-        self.assertFalse(eval_start.safe_to_proceed)
-        self.assertTrue(eval_start.route_to_human_clinician)
-        self.assertEqual(eval_start.recommended_phase, EMDRPhase.PHASE_2_PREPARATION)
+        self.assertIn("stall", (eval_s3.trigger_reason or "").lower())
 
     def test_workspace_exporter_persists_locally_and_parses_oauth(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
