@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import unittest
+import unittest.mock
 
 from apps.bitapp_personal_emdr.bitapp_presets import (
     BITAPP_CLOSURE_CONTAINMENT_PRESET,
@@ -122,8 +123,14 @@ class TestBiTappPersonalApplication(unittest.TestCase):
     def test_cli_modes_return_zero(self) -> None:
         self.assertEqual(run_cli(["--mode", "summary"]), 0)
         self.assertEqual(run_cli(["--mode", "loop-interrupt"]), 0)
+        with unittest.mock.patch(
+            "builtins.input",
+            side_effect=["1", "3", "Memory feels further away", "3", "Chest feels lighter", "0"],
+        ):
+            self.assertEqual(run_cli(["--mode", "interactive"]), 0)
         self.assertEqual(run_cli(["--mode", "simulate-session"]), 0)
 
 
 if __name__ == "__main__":
     unittest.main()
+

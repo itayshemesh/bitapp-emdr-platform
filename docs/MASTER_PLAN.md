@@ -7,7 +7,9 @@
 > [!TIP]
 > **In Simple Words — 30-Second Quick-Start Cheat Sheet**
 > * **What to Buy**: **Bi-Tapp Base Kit ($277) + Wristbands ($20)** at `https://bi-tapp.com/` (~$309 total with US shipping).
-> * **Weeks 1–4 Plan ($0/mo Solo First)**: Use your buzzers solo first. Only book an online human therapist (via your 5-character `remotEMDR` code) in Week 5+ if a memory refuses to budge.
+> * **Do I Need a Phone? Yes (For the Buzzers)**: The physical Bi-Tapp buzzers only have a power button on the casing—they pair via Bluetooth to the **free Bi-Tapp app on your iPhone/Android/iPad** (no login or subscription needed) where you move the **Speed (`1–10`)** and **Intensity (`1–10`)** sliders. Our Python companion app runs locally on your computer alongside your phone to coach you step-by-step.
+> * **Do I Need to Register a Website? No (Zero Websites or Accounts)**: Everything runs **100% locally** on your phone and computer. You do **not** need to buy a domain, host a website, sign up for `VirtualEMDR.com`, or register on `remotEMDR.com` (even if you later hire a human therapist, only the therapist has a `remotEMDR.com` account—you just read them the 5-character code from your phone app).
+> * **Weeks 1–4 Plan ($0/mo Solo First)**: Use your buzzers solo first. Only book an online human therapist in Week 5+ if a memory refuses to budge.
 > * **Stop Ex-Girlfriend Thought Loops Anytime (Mode A)**: Turn on **Speed `2`, Intensity `3` for `10 mins` (`600s`)** (`Range: Speed 1–3, Int 2–4, 5–15 mins / 300–900s`) and breathe slowly until the loop fades.
 > * **Daily Calm & 3-Kids Positive Anchor (Mode B)**: Every morning/evening, picture a warm moment with your 3 kids at **Speed `3`, Intensity `3` for `20s` rounds** (`Range: Speed 2–4, Int 2–4, 15–20s`).
 > * **1x/Week Breakup Memory Clearing (Mode C $\rightarrow$ D1 $\rightarrow$ D2)**: Once a week, process one breakup memory at **Speed `7`, Intensity `6` for `35s` rounds** (`Pain 1–6` normal; `Pain 7` shows a Caution Prompt; `Pain 8–10` or `3` stuck rounds **Auto-Stops** to Calming Mode **Speed `2`, Intensity `3`, `60s`**).
@@ -57,16 +59,19 @@ Unlike the breakup (which happened 2.5 years ago and is over), **not living with
 
 ---
 
-## 3. Bi-Tapp Hardware Guide & Exact Costs (`https://bi-tapp.com/`)
+## 3. Bi-Tapp Hardware Guide, Phone vs. Computer Setup & Exact Costs (`https://bi-tapp.com/`)
 
-### 3.1 How the Bi-Tapp Device Works
+### 3.1 How the Bi-Tapp Device, Your Phone, and Our App Work Together (FAQ)
 * **What's in the Box**: Two sleek, rechargeable wireless Bluetooth buzzers ("tappers", `2.5" long x 0.5" wide`) that pulse alternately—Left, Right, Left, Right.
 * **Hands-Free Options**: Hold them in your hands, slip them into your pockets or socks, or slide them into **Wristbands** so your hands are completely free while working, resting, or talking.
-* **Phone App Sliders (Free on iOS & Android)**:
-  - **Rate of Speed (`1` to `10`)**: How fast the buzzers alternate between left and right.
-  - **Rate of Intensity (`1` to `10`)**: How strongly each buzzer vibrates.
-* **Built-In Bridge for Online Human Therapists (`remotEMDR`)**:
-  If you ever decide to book a human therapist later, open the Bi-Tapp app $\rightarrow$ **Settings** $\rightarrow$ turn on **"Allow Provider Control"** and **"Show Provider Setup Code"**. Give that **5-character code** to your online therapist on `remotEMDR.com`, and the therapist can adjust your buzzers' speed and start/stop rounds remotely over the internet during your video call.
+* **Do I Need a Phone for the App? Yes (For the Buzzers)**:
+  - The physical Bi-Tapp buzzers only have a power button on the plastic casing—they do **not** have physical speed or intensity buttons on the device.
+  - To adjust **Rate of Speed (`1` to `10`)** and **Rate of Intensity (`1` to `10`)**, the buzzers pair via Bluetooth to the **free official Bi-Tapp app** on your **iPhone (iOS), Android phone, or iPad** (no login account or paid subscription required).
+  - **How Your Phone and Our Computer App Work Together**: Keep your phone next to you with the **Bi-Tapp app** open to move the Speed/Intensity sliders and tap Start/Pause, while running our Python companion app (`bitapp-emdr-platform`) on your computer as your step-by-step EMDR coach, safety circuit breaker, and private session logger.
+* **Do I Need to Register a Website? No (Zero Websites, Zero Accounts)**:
+  - **No Website or Domain to Register**: Everything runs **100% locally** on your computer and phone—there is no web server to host or domain to buy.
+  - **No Commercial EMDR Website Subscription Needed**: Because you are using our open-source companion app + your Bi-Tapp app, you do **not** need to register or pay for `VirtualEMDR.com` or any other website.
+  - **No Registration Needed on `remotEMDR.com`**: Even if you decide in Week 5+ to book an online human therapist, **you still never register an account on `remotEMDR.com`**. Only licensed therapists have accounts there. You simply open the Bi-Tapp app on your phone $\rightarrow$ **Settings** $\rightarrow$ turn on **"Allow Provider Control"** and **"Show Provider Setup Code"**, and read that **5-character code** to your therapist on Zoom so they can control your buzzers remotely.
 
 ### 3.2 Hardware Pricing Breakdown
 
@@ -213,7 +218,7 @@ bitapp-emdr-platform/
    - `bitapp_presets.py`: Exact starting numbers + comfortable ranges for Modes A (`600s` start, `300–900s` range), B (`20s` start, `15–20s` range), C (`35s` start, `30–45s` range), D1 (`25s` start, `20–30s` range), D2 (`60s` start, `60–120s` range), and the 5-character `remotEMDR` telehealth bridge.
    - `clinical_packs.py`: Pre-built target packs for your **2.5-Year Breakup Rumination** and **3-Children Fatherhood Connection Anchor**.
    - `options_analyzer.py`: Cost, frequency, and Solo-First roadmap calculator.
-   - `cli.py`: Interactive command-line runner supporting `--mode=summary`, `--mode=loop-interrupt`, and `--mode=simulate-session`.
+   - `cli.py`: Interactive command-line coach and runner supporting `--mode=summary` (full plan & settings reference), `--mode=loop-interrupt` (on-demand 10-minute rumination interrupter), `--mode=interactive` (live round-by-round guided solo EMDR session where you type your real-time `0–10` pain & belief scores), and `--mode=simulate-session` (automated demo walkthrough).
 
 ---
 
@@ -225,31 +230,50 @@ bitapp-emdr-platform/
 | **Phase 2** | `TASK-102` | Security & Setup | Scaffold package metadata, documentation index, and strict `.gitignore` secret isolation (`~/.config/bitapp-emdr/oauth_client.json`). | `README.md`, `pyproject.toml`, `.gitignore` |
 | **Phase 3** | `TASK-103` | Generic Framework | Implement domain-agnostic `@dataclass` schemas (Exact Start + Comfortable Range) and Two-Stage `SafetyCircuitBreaker` (Warning at 7, Auto-Stop at 8). | `framework/bls_protocol_engine/__init__.py`, `framework/bls_protocol_engine/schemas.py`, `framework/bls_protocol_engine/safety.py` |
 | **Phase 4** | `TASK-104` | Generic Framework | Implement 8-phase `ProtocolEngine` state machine, `BiTappCompanionAdapter`, and `GoogleWorkspaceSessionExporter`. | `framework/bls_protocol_engine/engine.py`, `framework/bls_protocol_engine/adapters.py`, `framework/bls_protocol_engine/workspace_sync.py` |
-| **Phase 5** | `TASK-105` | Specific App | Implement Bi-Tapp presets, 2.5-year breakup & 3-kids clinical packs, Solo-First cost/frequency analyzer, and CLI runner. | `apps/bitapp_personal_emdr/__init__.py`, `apps/bitapp_personal_emdr/bitapp_presets.py`, `apps/bitapp_personal_emdr/clinical_packs.py`, `apps/bitapp_personal_emdr/options_analyzer.py`, `apps/bitapp_personal_emdr/cli.py` |
-| **Phase 6** | `TASK-106` | Verification | Implement unit and integration test suites verifying all 8 phases, Two-Stage Safety Gate, and all 5 Bi-Tapp presets. | `tests/test_framework_engine.py`, `tests/test_bitapp_personal_app.py` |
+| **Phase 5** | `TASK-105` | Specific App | Implement Bi-Tapp presets, 2.5-year breakup & 3-kids clinical packs, Solo-First cost/frequency analyzer, and CLI runner (`summary`, `loop-interrupt`, `interactive`, `simulate-session`). | `apps/bitapp_personal_emdr/__init__.py`, `apps/bitapp_personal_emdr/bitapp_presets.py`, `apps/bitapp_personal_emdr/clinical_packs.py`, `apps/bitapp_personal_emdr/options_analyzer.py`, `apps/bitapp_personal_emdr/cli.py` |
+| **Phase 6** | `TASK-106` | Verification | Implement unit and integration test suites verifying all 8 phases, Two-Stage Safety Gate, interactive CLI coach, and all 5 Bi-Tapp presets. | `tests/test_framework_engine.py`, `tests/test_bitapp_personal_app.py` |
 | **Phase 7** | `TASK-107` | Security Gate | Execute pre-push confidentiality and secret scan verifying zero leaked credentials or internal links. | `docs/MASTER_PLAN.md`, `.gitignore` |
 | **Phase 8** | `TASK-108` | GitHub Rollout | Push feature branch and merge into `main` on `https://github.com/itayshemesh/bitapp-emdr-platform`. | `README.md`, `docs/MASTER_PLAN.md` |
 
 ---
 
-## 9. Rollout Strategy, Verification & How to Run
+## 9. Concrete Day-1 Setup, Rollout Strategy & How to Run
 
-### GitHub Main-Branch Rollout & Secret Isolation
-1. **Single Source of Truth on `main`**: All changes are verified on `feat/generic-framework-and-bitapp-emdr`, audited for zero secret exposure, and fast-forward merged into `main` at `https://github.com/itayshemesh/bitapp-emdr-platform`.
-2. **Zero Credential Check-In**: Your Google OAuth client configuration lives exclusively at `~/.config/bitapp-emdr/oauth_client.json` (`chmod 600`) outside the Git repository, and personal session logs are stored under `~/.local/share/bitapp-emdr/sessions/`.
+### Step 1: Physical Bi-Tapp + Phone Setup (Zero Websites or Accounts Needed)
+1. **No Website Registration**: Do **not** register any domain, website, or subscription (`VirtualEMDR.com` is not needed, and you do not need a `remotEMDR.com` account).
+2. **Pair Your Buzzers to Your Phone**:
+   - Install the free official **Bi-Tapp** app from the Apple App Store (iOS) or Google Play Store (Android) — no account creation required.
+   - Turn on Bluetooth on your phone, press the physical button on both Bi-Tapp tappers until the LED lights flash, and tap **Pair / Connect** inside the Bi-Tapp phone app.
+   - Keep the Bi-Tapp phone app open next to your computer so you can adjust the **Speed (`1–10`)** and **Intensity (`1–10`)** sliders whenever our Python coach tells you to.
 
-### How to Run the Application & Verify Everything
+### Step 2: Clone & Run the Python Companion App on Your Computer
+Everything runs on standard **Python 3.10+** with **zero external `pip` packages required**.
 
 ```bash
-# 1. Print your complete Bi-Tapp settings, Solo-First schedule, and cost breakdown:
-PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=summary
+# Clone your repository and enter the folder:
+git clone https://github.com/itayshemesh/bitapp-emdr-platform.git
+cd bitapp-emdr-platform
 
-# 2. Run the on-demand 3-step Rumination Loop Interrupter (when thoughts of your ex start spinning):
+# 1. LIVE INTERACTIVE COACH (Use this for your real weekly 35-45 min solo EMDR sessions):
+#    Walks you step-by-step through picking a memory, setting your phone sliders,
+#    timing each 35s round, and checking your 0-10 pain/belief numbers with the Two-Stage Safety Gate:
+PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=interactive
+
+# 2. ON-DEMAND RUMINATION INTERRUPTER (Use anytime thoughts of your ex start looping):
+#    Displays the immediate 3-step guide (Speed 2, Intensity 3, 10 minutes):
 PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=loop-interrupt
 
-# 3. Run an end-to-end simulated 8-phase EMDR session on a breakup memory node:
+# 3. FULL CHEAT SHEET & COST SUMMARY (Prints all 5 Bi-Tapp presets, ranges, and schedule):
+PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=summary
+
+# 4. AUTOMATED DEMO SESSION (Runs a simulated 8-phase session end-to-end and saves a sample log):
 PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=simulate-session
 
-# 4. Run the automated unit test suite (verifies Two-Stage Safety Gate, ranges, and Solo-First plan):
+# 5. RUN AUTOMATED TESTS (Verifies Two-Stage Safety Gate, presets, interactive mode, and logs):
 PYTHONPATH=. python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
+
+### GitHub Main-Branch Rollout & Secret Isolation
+1. **Single Source of Truth on `main`**: All changes are verified, audited for zero secret exposure, and pushed to `main` at `https://github.com/itayshemesh/bitapp-emdr-platform`.
+2. **Zero Credential Check-In**: Your local session logs are saved privately to `~/.local/share/bitapp-emdr/sessions/` on your machine (and if you ever configure optional Google Drive/Docs export, your OAuth config lives at `~/.config/bitapp-emdr/oauth_client.json` (`chmod 600`) strictly outside the Git repository).
+

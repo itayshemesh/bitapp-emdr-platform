@@ -8,20 +8,27 @@ A two-layer open-source architecture combining:
    - **Session Installation & Closure (Modes D1 & D2)**: Positive belief installation (`Start: Speed 4, Intensity 4, 25s rounds | Range: Speed 4–5, Intensity 3–4, 20–30s rounds`) and mandatory calming session closure (`Start: Speed 2, Intensity 3, 60s | Range: Speed 1–3, Intensity 2–4, 60–120s`).
 
 ## Single Source of Truth — Unified Master Plan
-* **[Unified Master Plan & Clinical Guide (`docs/MASTER_PLAN.md`)](docs/MASTER_PLAN.md)**: Complete plain-English explanation, Bi-Tapp hardware & pricing breakdown, Solo-First vs. Human Telehealth comparison, exact Bi-Tapp settings + comfortable ranges, weekly schedule, and software architecture.
+* **[Unified Master Plan & Clinical Guide (`docs/MASTER_PLAN.md`)](docs/MASTER_PLAN.md)**: Complete plain-English explanation, Day-1 phone & buzzer setup, Bi-Tapp hardware & pricing breakdown, Solo-First vs. Human Telehealth comparison, exact Bi-Tapp settings + comfortable ranges, weekly schedule, and software architecture.
 
-## Quick Start
+## Day-1 Setup FAQ (Phone & Website)
+1. **Do I need a phone?** **Yes, for the physical Bi-Tapp buzzers.** The tappers only have a single power button on the casing; you pair them via Bluetooth to the free **Bi-Tapp** app on iOS/Android to adjust the **Speed (`1–10`)** and **Intensity (`1–10`)** sliders. Our Python companion app runs on your computer right next to your phone and tells you the exact slider numbers for each step.
+2. **Do I need to register a website or account?** **No.** Zero websites, domains, or accounts are required (`VirtualEMDR.com` is not needed, and even if you hire a human therapist in Week 5+, only the therapist has a `remotEMDR.com` account — you just read them the 5-character code from your Bi-Tapp phone app).
+
+## Quick Start & How to Run
 
 ```bash
-# Run all unit tests
-PYTHONPATH=. python3 -m unittest discover -s tests -p "test_*.py" -v
+# 1. LIVE INTERACTIVE COACH (Use this for your real weekly 35-45 min solo EMDR sessions):
+PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=interactive
 
-# View the complete Bi-Tapp clinical roadmap, settings, and cost summary
-PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=summary
-
-# Trigger the on-demand 3-step Rumination Loop Interrupter (Start: Speed 2, Intensity 3)
+# 2. ON-DEMAND RUMINATION INTERRUPTER (Immediate 3-step guide: Speed 2, Intensity 3, 10m):
 PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=loop-interrupt
 
-# Run an end-to-end simulated 8-phase EMDR session
+# 3. FULL CHEAT SHEET & COST SUMMARY (All 5 Bi-Tapp presets, ranges, and Solo-First schedule):
+PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=summary
+
+# 4. AUTOMATED DEMO SESSION (Runs a simulated 8-phase session end-to-end):
 PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=simulate-session
+
+# 5. RUN AUTOMATED UNIT TESTS:
+PYTHONPATH=. python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
