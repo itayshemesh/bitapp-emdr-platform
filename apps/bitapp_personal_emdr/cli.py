@@ -238,22 +238,25 @@ def run_cli(argv: Optional[List[str]] = None) -> int:
                     f"\nPain dropped to 0-1! Moving to Mode D1 (Lock In Positive Belief: "
                     f"Speed {cfg_d1.speed_level}, Int {cfg_d1.intensity_level}, {cfg_d1.set_duration_seconds}s)..."
                 )
-                print(
-                    f"Hold the memory together with '{target.positive_cognition}' and scan your body from head to toe."
-                )
-                new_voc = _prompt_int(
-                    "How true does your positive belief feel now (1-7) [default=7]: ",
-                    7,
-                    1,
-                    7,
-                )
-                engine.execute_stimulation_set(
-                    bls_config=BITAPP_INSTALLATION_PRESET,
-                    post_set_observation="Locked in positive belief with clear body scan.",
-                    new_sud=new_sud,
-                    new_voc=new_voc,
-                    somatic_tension_clear=True,
-                )
+                for _d1_round in range(1, 4):
+                    print(
+                        f"Hold the memory together with '{target.positive_cognition}' and scan your body from head to toe."
+                    )
+                    new_voc = _prompt_int(
+                        "How true does your positive belief feel now (1-7) [default=7]: ",
+                        7,
+                        1,
+                        7,
+                    )
+                    engine.execute_stimulation_set(
+                        bls_config=BITAPP_INSTALLATION_PRESET,
+                        post_set_observation="Locked in positive belief with clear body scan.",
+                        new_sud=new_sud,
+                        new_voc=new_voc,
+                        somatic_tension_clear=(new_voc >= 7),
+                    )
+                    if new_voc >= 7:
+                        break
                 break
             round_num += 1
 

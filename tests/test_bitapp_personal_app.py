@@ -155,7 +155,7 @@ class TestBiTappPersonalApplication(unittest.TestCase):
                     run_cli(["--mode", "loop-interrupt", "--session-log-dir", tmpdir]), 0
                 )
 
-                # Branch 1: Interactive happy path (SUD 6 -> 3 -> 0, VOC -> 7, persisted to JSONL)
+                # Branch 1: Interactive happy path (SUD 6 -> 3 -> 0, VOC 5 -> 7 across 2 D1 rounds, persisted to JSONL)
                 with unittest.mock.patch(
                     "builtins.input",
                     side_effect=[
@@ -165,6 +165,7 @@ class TestBiTappPersonalApplication(unittest.TestCase):
                         "3",
                         "Chest feels lighter",
                         "0",
+                        "5",
                         "7",
                     ],
                 ):
@@ -208,4 +209,3 @@ class TestBiTappPersonalApplication(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
