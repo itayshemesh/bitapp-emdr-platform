@@ -2,20 +2,26 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import os
 import tempfile
 import unittest
 
 from framework.bls_protocol_engine.adapters import (
+    AdapterDispatchReceipt,
     AudioVisualSimulatedAdapter,
     BiTappCompanionAdapter,
+    StimulationAdapter,
 )
 from framework.bls_protocol_engine.engine import ProtocolEngine
-from framework.bls_protocol_engine.safety import SafetyCircuitBreaker
+from framework.bls_protocol_engine.safety import SafetyCircuitBreaker, SafetyEvaluation
 from framework.bls_protocol_engine.schemas import (
     BilateralStimulationConfig,
     EMDRPhase,
     ModalityType,
+    SessionSummary,
+    StimulationSetRecord,
     TargetMemoryNode,
     WindowOfToleranceCheck,
 )
@@ -64,13 +70,16 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         )
 
     def test_happy_path_desensitization_to_closure(self) -> None:
+        self.assertIsInstance(self.adapter, StimulationAdapter)
         engine = ProtocolEngine(adapter=self.adapter)
         eval_start = engine.start_session(self.safe_target, self.safe_wot)
+        self.assertIsInstance(eval_start, SafetyEvaluation)
         self.assertTrue(eval_start.safe_to_proceed)
         self.assertIsNone(eval_start.caution_warning)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_3_ASSESSMENT)
 
         receipt_1, eval_s1 = engine.execute_stimulation_set(self.fast_config, "Shift 1", new_sud=3)
+        self.assertIsInstance(receipt_1, AdapterDispatchReceipt)
         self.assertTrue(eval_s1.safe_to_proceed)
         self.assertIn("Comfortable Range: Speed 6-8, Intensity 5-7, Duration 30-45s", receipt_1.user_action_instruction)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_4_DESENSITIZATION)
@@ -93,14 +102,17 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertTrue(eval_s4.safe_to_proceed)
         self.assertEqual(eval_s4.recommended_phase, EMDRPhase.PHASE_7_CLOSURE)
         self.assertEqual(engine.current_phase, EMDRPhase.PHASE_7_CLOSURE)
+        self.assertIsInstance(engine.sets[-1], StimulationSetRecord)
         self.assertTrue(engine.sets[-1].somatic_tension_clear)
-        self.assertTrue(engine.closure_achieved)
+        self.assertFalse(engine.closure_achieved)
 
         summary = engine.complete_closure(self.slow_config, "Completed safely")
+        self.assertIsInstance(summary, SessionSummary)
         self.assertEqual(summary.final_sud, 0)
         self.assertEqual(summary.final_voc, 7)
         self.assertFalse(summary.circuit_breaker_tripped)
         self.assertTrue(summary.closure_achieved)
+        self.assertIsNotNone(engine.last_closure_receipt)
 
     def test_two_stage_safety_gate_caution_at_7_and_autostop_at_8(self) -> None:
         level_7_target = TargetMemoryNode(
@@ -176,7 +188,8 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertFalse(eval_overwhelm.safe_to_proceed)
         self.assertIn("overwhelm", (eval_overwhelm.trigger_reason or "").lower())
 
-    def test_stagnation_circuit_breaker_trips_after_3_flat_sets_and_is_domain_agnostic(self) -> None:
+    def test_stagnation_circuit_breaker_trips_after_3_flat_sets_and_respects_round1_drop(self) -> None:
+        # Case 1: Initial SUD=5, sets [5, 5, 5] -> 3 rounds in a row with no drop -> trips on Set 3
         engine = ProtocolEngine(
             adapter=self.adapter,
             safety_breaker=SafetyCircuitBreaker(stagnation_set_limit=3),
@@ -192,6 +205,63 @@ class TestGenericFrameworkEngine(unittest.TestCase):
         self.assertIn("stall", (eval_s3.trigger_reason or "").lower())
         self.assertNotIn("2.5-year-old", eval_s3.interweave_or_grounding_prompt or "")
         self.assertNotIn("Bi-Tapp", eval_s3.interweave_or_grounding_prompt or "")
+
+        # Case 2: Initial SUD=5, Round 1 drops to 4, Round 2=4, Round 3=4 -> only 2 stalled rounds so far!
+        engine_drop = ProtocolEngine(
+            adapter=self.adapter,
+            safety_breaker=SafetyCircuitBreaker(stagnation_set_limit=3),
+        )
+        engine_drop.start_session(self.safe_target, self.safe_wot)
+        engine_drop.execute_stimulation_set(self.fast_config, "Drop to 4", new_sud=4)
+        engine_drop.execute_stimulation_set(self.fast_config, "Stuck 1 at 4", new_sud=4)
+        _, eval_r3 = engine_drop.execute_stimulation_set(self.fast_config, "Stuck 2 at 4", new_sud=4)
+        self.assertTrue(eval_r3.safe_to_proceed)
+        # Round 4 stays at 4 -> 3 consecutive stalled rounds (R2, R3, R4) -> trips on Set 4
+        _, eval_r4 = engine_drop.execute_stimulation_set(self.fast_config, "Stuck 3 at 4", new_sud=4)
+        self.assertFalse(eval_r4.safe_to_proceed)
+
+    def test_schema_validation_and_pre_session_guards(self) -> None:
+        with self.assertRaises(ValueError):
+            BilateralStimulationConfig(
+                modality=ModalityType.TACTILE_BITAPP,
+                speed_level=11,
+                intensity_level=5,
+                set_duration_seconds=30,
+            )
+        with self.assertRaises(ValueError):
+            BilateralStimulationConfig(
+                modality=ModalityType.TACTILE_BITAPP,
+                speed_level=5,
+                intensity_level=5,
+                set_duration_seconds=30,
+                provider_control_code="BAD!",
+            )
+        with self.assertRaises(ValueError):
+            TargetMemoryNode(
+                node_id="BAD",
+                cluster_name="C",
+                title="T",
+                worst_image_cue="I",
+                negative_cognition="N",
+                positive_cognition="P",
+                initial_voc=8,
+                initial_sud=5,
+            )
+        with self.assertRaises(ValueError):
+            WindowOfToleranceCheck(dissociation_score=11, emotional_overwhelm_score=2)
+
+        breaker = SafetyCircuitBreaker()
+        no_res_wot = WindowOfToleranceCheck(
+            dissociation_score=1,
+            emotional_overwhelm_score=2,
+            safe_place_established=False,
+        )
+        self.assertFalse(breaker.evaluate_pre_session(self.safe_target, no_res_wot).safe_to_proceed)
+        high_dissoc_wot = WindowOfToleranceCheck(
+            dissociation_score=6,
+            emotional_overwhelm_score=2,
+        )
+        self.assertFalse(breaker.evaluate_pre_session(self.safe_target, high_dissoc_wot).safe_to_proceed)
 
     def test_workspace_exporter_persists_locally_and_parses_oauth(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -215,6 +285,16 @@ class TestGenericFrameworkEngine(unittest.TestCase):
             summary = engine.complete_closure(self.slow_config, "Test closure")
             log_path = exporter.persist_session_summary(summary)
             self.assertTrue(os.path.isfile(log_path))
+
+            # Missing OAuth file emits diagnostic to stderr and returns None
+            missing_exporter = GoogleWorkspaceSessionExporter(
+                oauth_client_path=os.path.join(tmpdir, "nonexistent.json"),
+                session_log_dir=os.path.join(tmpdir, "logs"),
+            )
+            err_buf = io.StringIO()
+            with contextlib.redirect_stderr(err_buf):
+                self.assertIsNone(missing_exporter.load_installed_oauth_metadata())
+            self.assertIn("[workspace_sync] Diagnostic:", err_buf.getvalue())
 
 
 if __name__ == "__main__":

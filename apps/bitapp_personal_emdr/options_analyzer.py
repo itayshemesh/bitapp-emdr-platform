@@ -91,9 +91,9 @@ def get_emdr_options_catalog() -> List[EMDROptionComparison]:
                 "Client enables 'Allow Provider Control' in Bi-Tapp app and shares the 5-character "
                 "Provider Setup Code; therapist remotely controls tapper speed/intensity live."
             ),
-            monthly_cost_usd_range=(0, 960),
-            per_session_cost_usd_range=(0, 240),
-            recommended_frequency="1x/week (60-90 min session) if solo memories stay stuck.",
+            monthly_cost_usd_range=(0, 1100),
+            per_session_cost_usd_range=(0, 275),
+            recommended_frequency="1x/week (60-75 min session) if solo memories stay stuck.",
             clinical_safety_tier="HIGH (Live clinical co-regulation & cognitive interweaves)",
             best_for=(
                 "Memories that hit the Level 8+ auto-stop, stay stuck after 3 solo rounds, or "
@@ -111,7 +111,7 @@ def get_emdr_options_catalog() -> List[EMDROptionComparison]:
             monthly_cost_usd_range=(0, 240),
             per_session_cost_usd_range=(0, 60),
             recommended_frequency=(
-                "Daily 10m resourcing + on-demand loop breaker + 1x/week 60-90m human session."
+                "Daily 10m resourcing + on-demand loop breaker + 1x/week 60-75m human session."
             ),
             clinical_safety_tier="OPTIMAL (Combines 24/7 somatic regulation with clinical safety)",
             best_for=(

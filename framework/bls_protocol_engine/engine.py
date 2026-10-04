@@ -100,6 +100,7 @@ class ProtocolEngine:
         evaluation = self.safety_breaker.evaluate_set_progression(
             self.sets,
             human_clinician_present=self.wot.human_clinician_present,
+            initial_sud=self.target.initial_sud,
         )
 
         if not evaluation.safe_to_proceed:
@@ -123,20 +124,20 @@ class ProtocolEngine:
             self._record_phase(EMDRPhase.PHASE_6_BODY_SCAN)
             if somatic_tension_clear:
                 self._record_phase(EMDRPhase.PHASE_7_CLOSURE)
-                self.closure_achieved = True
         elif (
             self.current_phase == EMDRPhase.PHASE_6_BODY_SCAN
             and somatic_tension_clear
         ):
             self._record_phase(EMDRPhase.PHASE_7_CLOSURE)
-            self.closure_achieved = True
 
         return receipt, evaluation
 
     def complete_closure(self, closing_config: BilateralStimulationConfig, note: str) -> SessionSummary:
         """Executes mandatory Phase 7 Closure (Safe Place / Container) and returns summary."""
         self._record_phase(EMDRPhase.PHASE_7_CLOSURE)
-        self.adapter.configure_and_prompt(closing_config)
+        self.last_closure_receipt: Optional[AdapterDispatchReceipt] = (
+            self.adapter.configure_and_prompt(closing_config)
+        )
         self.closure_achieved = True
         if note:
             self.handoff_notes.append(f"Closure Note: {note}")

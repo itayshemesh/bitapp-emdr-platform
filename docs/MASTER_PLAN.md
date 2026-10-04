@@ -218,7 +218,7 @@ bitapp-emdr-platform/
    - `bitapp_presets.py`: Exact starting numbers + comfortable ranges for Modes A (`600s` start, `300–900s` range), B (`20s` start, `15–20s` range), C (`35s` start, `30–45s` range), D1 (`25s` start, `20–30s` range), D2 (`60s` start, `60–120s` range), and the 5-character `remotEMDR` telehealth bridge.
    - `clinical_packs.py`: Pre-built target packs for your **2.5-Year Breakup Rumination** and **3-Children Fatherhood Connection Anchor**.
    - `options_analyzer.py`: Cost, frequency, and Solo-First roadmap calculator.
-   - `cli.py`: Interactive command-line coach and runner supporting `--mode=summary` (full plan & settings reference), `--mode=loop-interrupt` (on-demand 10-minute rumination interrupter), `--mode=interactive` (live round-by-round guided solo EMDR session where you type your real-time `0–10` pain & belief scores), and `--mode=simulate-session` (automated demo walkthrough).
+   - `cli.py`: Interactive command-line coach and runner supporting `--mode=summary` (full plan & settings reference), `--mode=loop-interrupt` (on-demand 10-minute rumination interrupter), `--mode=interactive` (live round-by-round guided solo EMDR session where you type your real-time `0–10` pain & belief scores), `--mode=simulate-session` (automated demo walkthrough), and `--session-log-dir` (optional custom directory for private JSONL session logs).
 
 ---
 
@@ -254,7 +254,7 @@ Everything runs on standard **Python 3.10+** with **zero external `pip` packages
 git clone https://github.com/itayshemesh/bitapp-emdr-platform.git
 cd bitapp-emdr-platform
 
-# 1. LIVE INTERACTIVE COACH (Use this for your real weekly 35-45 min solo EMDR sessions):
+# 1. LIVE INTERACTIVE COACH (Use this for your real weekly 60-75 min solo EMDR sessions):
 #    Walks you step-by-step through picking a memory, setting your phone sliders,
 #    timing each 35s round, and checking your 0-10 pain/belief numbers with the Two-Stage Safety Gate:
 PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=interactive
@@ -276,4 +276,3 @@ PYTHONPATH=. python3 -m unittest discover -s tests -p "test_*.py" -v
 ### GitHub Main-Branch Rollout & Secret Isolation
 1. **Single Source of Truth on `main`**: All changes are verified, audited for zero secret exposure, and pushed to `main` at `https://github.com/itayshemesh/bitapp-emdr-platform`.
 2. **Zero Credential Check-In**: Your local session logs are saved privately to `~/.local/share/bitapp-emdr/sessions/` on your machine (and if you ever configure optional Google Drive/Docs export, your OAuth config lives at `~/.config/bitapp-emdr/oauth_client.json` (`chmod 600`) strictly outside the Git repository).
-

@@ -38,7 +38,11 @@ class GoogleWorkspaceSessionExporter:
             or os.environ.get("BITAPP_OAUTH_CLIENT_PATH")
             or DEFAULT_OAUTH_CONFIG_PATH
         )
-        self.session_log_dir = session_log_dir or DEFAULT_SESSION_LOG_DIR
+        self.session_log_dir = (
+            session_log_dir
+            or os.environ.get("BITAPP_SESSION_LOG_DIR")
+            or DEFAULT_SESSION_LOG_DIR
+        )
 
     def load_installed_oauth_metadata(self) -> Optional[Dict[str, Any]]:
         """Loads and validates OAuth client config from outside the Git repository."""

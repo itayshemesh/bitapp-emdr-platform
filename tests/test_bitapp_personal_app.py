@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
+import json
+import os
+import tempfile
 import unittest
 import unittest.mock
 
@@ -13,7 +18,7 @@ from apps.bitapp_personal_emdr.bitapp_presets import (
     BITAPP_PHASE4_REPROCESSING_PRESET,
     create_remotemdr_telehealth_config,
 )
-from apps.bitapp_personal_emdr.cli import run_cli
+from apps.bitapp_personal_emdr.cli import _prompt_int, run_cli
 from apps.bitapp_personal_emdr.clinical_packs import (
     get_breakup_rumination_target_pack,
     get_children_separation_rdi_pack,
@@ -109,6 +114,8 @@ class TestBiTappPersonalApplication(unittest.TestCase):
         catalog = get_emdr_options_catalog()
         self.assertGreaterEqual(len(catalog), 5)
         self.assertEqual(catalog[0].category, "SOLO_FIRST_PRIMARY")
+        self.assertEqual(catalog[3].per_session_cost_usd_range, (0, 275))
+        self.assertEqual(catalog[3].monthly_cost_usd_range, (0, 1100))
 
         report = build_treatment_schedule_and_cost_report(
             include_wristbands=True,
@@ -120,15 +127,83 @@ class TestBiTappPersonalApplication(unittest.TestCase):
         self.assertEqual(report["grand_total_estimated_usd"], 277 + 20 + 12)
         self.assertIn("Try Solo First", str(report["primary_strategy"]))
 
-    def test_cli_modes_return_zero(self) -> None:
-        self.assertEqual(run_cli(["--mode", "summary"]), 0)
-        self.assertEqual(run_cli(["--mode", "loop-interrupt"]), 0)
-        with unittest.mock.patch(
-            "builtins.input",
-            side_effect=["1", "3", "Memory feels further away", "3", "Chest feels lighter", "0"],
-        ):
-            self.assertEqual(run_cli(["--mode", "interactive"]), 0)
-        self.assertEqual(run_cli(["--mode", "simulate-session"]), 0)
+    def test_prompt_int_diagnostics_and_clamping(self) -> None:
+        err_buf = io.StringIO()
+        with contextlib.redirect_stderr(err_buf):
+            with unittest.mock.patch("builtins.input", side_effect=["abc", "-4", "25", ""]):
+                self.assertEqual(_prompt_int("Pain: ", 5, 0, 10), 5)
+                self.assertEqual(_prompt_int("Pain: ", 5, 0, 10), 0)
+                self.assertEqual(_prompt_int("Pain: ", 5, 0, 10), 10)
+                self.assertEqual(_prompt_int("Pain: ", 5, 0, 10), 5)
+            with unittest.mock.patch("builtins.input", side_effect=EOFError):
+                self.assertEqual(_prompt_int("Pain: ", 4, 0, 10), 4)
+        stderr_text = err_buf.getvalue()
+        self.assertIn("Non-integer input 'abc'", stderr_text)
+        self.assertIn("clamped to 0", stderr_text)
+        self.assertIn("clamped to 10", stderr_text)
+        self.assertIn("EOF received", stderr_text)
+
+    def test_cli_modes_and_interactive_branches_with_session_persistence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_buf = io.StringIO()
+            err_buf = io.StringIO()
+            with contextlib.redirect_stdout(out_buf), contextlib.redirect_stderr(err_buf):
+                self.assertEqual(
+                    run_cli(["--mode", "summary", "--session-log-dir", tmpdir]), 0
+                )
+                self.assertEqual(
+                    run_cli(["--mode", "loop-interrupt", "--session-log-dir", tmpdir]), 0
+                )
+
+                # Branch 1: Interactive happy path (SUD 6 -> 3 -> 0, VOC -> 7, persisted to JSONL)
+                with unittest.mock.patch(
+                    "builtins.input",
+                    side_effect=[
+                        "1",
+                        "3",
+                        "Memory feels further away",
+                        "3",
+                        "Chest feels lighter",
+                        "0",
+                        "7",
+                    ],
+                ):
+                    self.assertEqual(
+                        run_cli(["--mode", "interactive", "--session-log-dir", tmpdir]), 0
+                    )
+
+                # Branch 2: Interactive pre-session Auto-Stop (Target 4 requires clinician / SUD 8)
+                with unittest.mock.patch("builtins.input", side_effect=["4", "3"]):
+                    self.assertEqual(
+                        run_cli(["--mode", "interactive", "--session-log-dir", tmpdir]), 0
+                    )
+
+                # Branch 3: Interactive Level-7 Caution declined by user ('n')
+                with unittest.mock.patch("builtins.input", side_effect=["3", "3", "n"]):
+                    self.assertEqual(
+                        run_cli(["--mode", "interactive", "--session-log-dir", tmpdir]), 0
+                    )
+
+                # Branch 4: Interactive Level-7 Caution accepted ('y') -> mid-session spike to 8
+                with unittest.mock.patch(
+                    "builtins.input",
+                    side_effect=["3", "3", "y", "Sudden wave of grief", "8"],
+                ):
+                    self.assertEqual(
+                        run_cli(["--mode", "interactive", "--session-log-dir", tmpdir]), 0
+                    )
+
+                # Simulate-session mode also persists to sessions.jsonl
+                self.assertEqual(
+                    run_cli(["--mode", "simulate-session", "--session-log-dir", tmpdir]), 0
+                )
+
+            log_file = os.path.join(tmpdir, "sessions.jsonl")
+            self.assertTrue(os.path.isfile(log_file))
+            with open(log_file, "r", encoding="utf-8") as f:
+                lines = [json.loads(line) for line in f if line.strip()]
+            self.assertEqual(len(lines), 5)
+            self.assertTrue(all(entry["closure_achieved"] for entry in lines))
 
 
 if __name__ == "__main__":

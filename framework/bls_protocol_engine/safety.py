@@ -159,6 +159,7 @@ class SafetyCircuitBreaker:
         self,
         sets: List[StimulationSetRecord],
         human_clinician_present: bool = False,
+        initial_sud: Optional[int] = None,
     ) -> SafetyEvaluation:
         """Evaluates post-set pain levels for Level-7 caution, Level-8+ auto-stop, or 3-set stall."""
         if not sets:
@@ -183,17 +184,25 @@ class SafetyCircuitBreaker:
         desensitization_sets = [
             s for s in sets if s.phase == EMDRPhase.PHASE_4_DESENSITIZATION
         ]
-        if len(desensitization_sets) >= self.stagnation_set_limit:
+        if (
+            latest.phase == EMDRPhase.PHASE_4_DESENSITIZATION
+            and len(desensitization_sets) >= self.stagnation_set_limit
+        ):
             window = desensitization_sets[-self.stagnation_set_limit :]
-            first_sud = window[0].sud_rating
+            prev_sud = (
+                desensitization_sets[-self.stagnation_set_limit - 1].sud_rating
+                if len(desensitization_sets) > self.stagnation_set_limit
+                else initial_sud
+            )
+            baseline_stalled = prev_sud is None or window[0].sud_rating >= prev_sud
             last_sud = window[-1].sud_rating
             if (
                 last_sud > 1
+                and baseline_stalled
                 and all(
                     window[i].sud_rating >= window[i - 1].sud_rating
                     for i in range(1, len(window))
                 )
-                and last_sud >= first_sud
             ):
                 return SafetyEvaluation(
                     safe_to_proceed=False,

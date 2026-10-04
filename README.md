@@ -17,7 +17,7 @@ A two-layer open-source architecture combining:
 ## Quick Start & How to Run
 
 ```bash
-# 1. LIVE INTERACTIVE COACH (Use this for your real weekly 35-45 min solo EMDR sessions):
+# 1. LIVE INTERACTIVE COACH (Use this for your real weekly 60-75 min solo EMDR sessions):
 PYTHONPATH=. python3 -m apps.bitapp_personal_emdr.cli --mode=interactive
 
 # 2. ON-DEMAND RUMINATION INTERRUPTER (Immediate 3-step guide: Speed 2, Intensity 3, 10m):
