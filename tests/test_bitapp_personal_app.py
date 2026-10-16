@@ -126,6 +126,12 @@ class TestBiTappPersonalApplication(unittest.TestCase):
         )
         self.assertEqual(report["grand_total_estimated_usd"], 277 + 20 + 12)
         self.assertIn("Try Solo First", str(report["primary_strategy"]))
+        guide = report["meditation_sleep_and_long_wear_guide"]
+        self.assertTrue(guide["long_hours_wear_safety"]["is_safe"])
+        self.assertEqual(
+            guide["falling_asleep_rules"]["recommended_settings"],
+            "Speed 1-2, Intensity 1-2 for 20-30 mins",
+        )
 
     def test_prompt_int_diagnostics_and_clamping(self) -> None:
         err_buf = io.StringIO()

@@ -167,4 +167,26 @@ def build_treatment_schedule_and_cost_report(
             "reprocessing_session_duration_minutes": 75,
             "mandatory_reconsolidation_rest_hours": 48,
         },
+        "meditation_sleep_and_long_wear_guide": {
+            "combine_with_meditation_video": [
+                "Mode A (Stop Looping Thoughts - Speed 2, Int 3, 10m): Pair with 4s/6s breathing pacer or calm nature video.",
+                "Mode B (Daily Calm & 3-Kids Anchor - Speed 3, Int 3, 20s rounds): Pair with Safe-Place or Loving-Kindness meditation.",
+                "Mode D2 (Session Closure - Speed 2, Int 3, 60-120s): Pair with 5-minute guided body scan or breathing cool-down.",
+            ],
+            "keep_meditation_video_off": [
+                "Mode C (Weekly Fast Memory Processing - Speed 7, Int 6, 35s rounds): Keep video OFF so it does not distract from the target memory.",
+                "Mode D1 (Positive Belief Installation - Speed 4, Int 4, 25s rounds): Keep video OFF while locking in your positive belief.",
+            ],
+            "falling_asleep_rules": {
+                "recommended_settings": "Speed 1-2, Intensity 1-2 for 20-30 mins",
+                "placement": "Slip one buzzer inside each loose sock (against soft side of foot/calf) or soft wristbands; do not hold in hands.",
+                "video_timer": "Use Yoga Nidra / NSDR, sleep body scan, or dark-screen rain with Autoplay OFF.",
+                "bedtime_restriction": "Never run fast Mode C (Speed 7) right before sleep.",
+            },
+            "long_hours_wear_safety": {
+                "is_safe": True,
+                "optimal_session_bout_minutes": "15 to 30 minutes (brain tunes out constant pulses after 30-60 mins due to habituation)",
+                "battery_life_low_settings_hours": "12 to 16 hours",
+            },
+        },
     }
