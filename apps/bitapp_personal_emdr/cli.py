@@ -129,6 +129,7 @@ def run_cli(argv: Optional[List[str]] = None) -> int:
             "Step 1: Turn on Bi-Tapp in your wristbands or pockets at Speed 2, Intensity 3 (10 mins / 600s; Range: Speed 1-3, Intensity 2-4, 5-15 mins / 300-900s).",
             "Step 2: Tell yourself: 'This is a 2.5-year-old memory firing, not an emergency today.'",
             "Step 3: Breathe in for 4 seconds, out for 6 seconds while feeling the gentle left-right pulse until the pain drops to 2 or below.",
+            "Meditation Tip: You can pair Mode A with a 4s/6s breathing pacer or calm nature video. (For bedtime sleep: use Speed 1-2, Intensity 1-2 in loose socks for 20-30 mins with Autoplay OFF).",
         ]
         print("\n".join(steps))
         return 0
